@@ -11,7 +11,9 @@ async function main() {
 	const app = new PIXI.Application();
 	await app.init({ 
 		
-		width: window.innerWidth,  
+		
+		// transparent: false,   
+		width: window.innerWidth,  // Set width to the window's inner width
         height: window.innerHeight
 	
 	});
