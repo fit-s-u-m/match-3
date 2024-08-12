@@ -4,6 +4,7 @@ const gridSize =150; // Size of each grid cell
 const numCols = 8;   // Number of columns
 const numRows = 8;   // Number of rows
 
+
 const itemTextures = [
     'assets/blue.png', 
     'assets/green.png',
@@ -48,6 +49,7 @@ async function main() {
   // Load the textures for level and timer backgrounds
   const levelBackgroundTexture = await PIXI.Assets.load("assets/level1.png");
   const timerBackgroundTexture = await PIXI.Assets.load("assets/level1.png");
+  const scoreBackgroundTexture = await PIXI.Assets.load("assets/level1.png");
 
   // Calculate the starting position to center the grid
   const startX = (app.screen.width - (numCols * gridSize)) / 2;
@@ -66,6 +68,8 @@ async function main() {
             cellSprite.height = gridSize;
 
             app.stage.addChild(cellSprite); // Add the cell to the stage
+
+
 			  // Create a random item sprite for each cell
 			  const itemSprite = new PIXI.Sprite(loadedItemTextures[Math.floor(Math.random() * loadedItemTextures.length)]);
 			  itemSprite.x = cellSprite.x + (gridSize - itemSprite.width) / 2; // Center the item in the cell
@@ -94,7 +98,7 @@ async function main() {
 // Create level background and text
 const levelBackgroundSprite = new PIXI.Sprite(levelBackgroundTexture);
 levelBackgroundSprite.x = 300; 
-levelBackgroundSprite.y = startY + (numRows * gridSize) / 2- 200 - levelBackgroundSprite.height / 2; // Centered vertically
+levelBackgroundSprite.y = startY + (numRows * gridSize) / 2- 100 - levelBackgroundSprite.height / 2; // Centered vertically
 app.stage.addChild(levelBackgroundSprite);
 
 const levelText = new PIXI.Text('Level: 1', {
@@ -122,6 +126,27 @@ const timerText = new PIXI.Text('Timer: 60', {
 timerText.x = timerBackgroundSprite.x +70; // Adjust position inside background
 timerText.y = timerBackgroundSprite.y + (timerBackgroundSprite.height - timerText.height) / 2;
 app.stage.addChild(timerText);
+
+
+
+
+// create score background and text
+
+const scoreBackgroundSprite = new PIXI.Sprite(scoreBackgroundTexture);
+scoreBackgroundSprite.x =300;
+scoreBackgroundSprite.y = startY + (numRows * gridSize) / 2 - 200 - scoreBackgroundSprite.height / 2 ; // Centered vertically
+app.stage.addChild(scoreBackgroundSprite);
+
+const scoreText = new PIXI.Text('Score: 0', {
+	fontSize: 40,
+	fill: '#ffffff',
+	align: 'center',
+	fontWeight: 'bold'
+});
+scoreText.x = scoreBackgroundSprite.x +70; // Adjust position inside background
+scoreText.y = scoreBackgroundSprite.y + (scoreBackgroundSprite.height - scoreText.height) / 2;
+app.stage.addChild(scoreText);
+
 
 
 
