@@ -14,6 +14,12 @@ const itemTextures = [
 	'assets/yellow.png',
 ];
 
+
+
+let score = 0;
+let level = 1;
+
+
 async function main() {
 	// Create a Pixi Application
 
@@ -54,7 +60,7 @@ async function main() {
   // Calculate the starting position to center the grid
   const startX = (app.screen.width - (numCols * gridSize)) / 2;
   const startY = (app.screen.height - (numRows * gridSize)) / 2;
-
+//   const gridItems: PIXI.Sprite[][] = [];
     // Create the grid
     for (let row = 0; row < numRows; row++) {
         for (let col = 0; col < numCols; col++) {
@@ -79,6 +85,7 @@ async function main() {
   
 			  app.stage.addChild(itemSprite); // Add item sprite to the stage
 			  animateItemDrop(itemSprite, cellSprite.y + (gridSize - itemSprite.height) / 2);
+			//   gridItems[row][col] = itemSprite;
         }
     }
     // Function to animate the item dropping
@@ -137,6 +144,9 @@ scoreBackgroundSprite.x =300;
 scoreBackgroundSprite.y = startY + (numRows * gridSize) / 2 - 200 - scoreBackgroundSprite.height / 2 ; // Centered vertically
 app.stage.addChild(scoreBackgroundSprite);
 
+
+
+
 const scoreText = new PIXI.Text('Score: 0', {
 	fontSize: 40,
 	fill: '#ffffff',
@@ -147,6 +157,36 @@ scoreText.x = scoreBackgroundSprite.x +70; // Adjust position inside background
 scoreText.y = scoreBackgroundSprite.y + (scoreBackgroundSprite.height - scoreText.height) / 2;
 app.stage.addChild(scoreText);
 
+function updateScore(points: number) { // this function will be called when a match is found
+	score += points;
+	scoreText.text = `Score: ${score}`;
+	if (score >= level * 100) { // Increase level every 100 points
+		level++;
+		levelText.text = `Level: ${level}`;
+	}
+}
+
+
+
+// i am gonna try to find a better way for the timer implementation
+
+let timerInterval: number;
+
+function startTimer(duration: number) {
+    let remainingTime = duration;
+
+    timerInterval = setInterval(() => {
+        if (remainingTime > 0) {
+            timerText.text = `Timer: ${remainingTime}`;
+            remainingTime--;
+        } else {
+            timerText.text = "Time's up!";
+            clearInterval(timerInterval);
+        }
+    }, 1000);
+}
+
+startTimer(60); // Start a 60-second timer
 
 
 
