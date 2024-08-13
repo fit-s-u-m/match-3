@@ -1,4 +1,4 @@
-import { RENDERER, SPRITE, TEXTURE } from "../types";
+import { RENDERER, TEXTURE } from "../types";
 export class Grid {
 	gridImg: TEXTURE
 	renderer: RENDERER
@@ -13,7 +13,7 @@ export class Grid {
 	}
 	async makeGrid(row: number, col: number) { // create grid
 		await this.init()
-		const grid: { x: number, y: number, cellSize: number }[] = []
+		const grid: { x: number, y: number, cellSize: number, candyId: number }[] = []
 		const margin = 10 // to create spacing
 		const cellSize = col > row ?
 			(this.renderer.app.screen.width - margin * col) / col :
@@ -34,7 +34,8 @@ export class Grid {
 				cellSprite.width = cellSize
 				cellSprite.height = cellSize
 				this.renderer.stage(cellSprite)
-				grid.push({ x, y, cellSize })
+				const candyId = Math.floor(Math.random() * 6)
+				grid.push({ x, y, cellSize, candyId })
 			}
 		}
 		return grid

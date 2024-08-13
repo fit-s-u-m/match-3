@@ -1,9 +1,10 @@
-import { RENDERER, SPRITE, TEXTURE } from "../types";
+import { GRIDINFO, RENDERER, SPRITE, TEXTURE } from "../types";
 
 export class Candies {
 	renderer: RENDERER
 	candyTextures: TEXTURE[]
 	prevPos: { x: number, y: number } = { x: 0, y: 0 }
+	gridInfo: GRIDINFO = []
 	private dragTarget: SPRITE | null = null;
 
 	constructor(renderer: RENDERER) {
@@ -30,11 +31,14 @@ export class Candies {
 		return candy
 	}
 	startDrag(candy: SPRITE) {
-		candy.alpha = 0.5
+		candy.alpha = 0.75
 		this.dragTarget = candy
 		this.renderer.dragger = this
 		this.prevPos = { x: candy.x, y: candy.y }
 		this.renderer.app.stage.on('pointermove', this.dragMove.bind(this))
+	}
+	setCandyProp(gridInfo: GRIDINFO) {
+		this.gridInfo = gridInfo
 	}
 	dragMove(event: any) {
 		if (this.dragTarget) {
@@ -45,11 +49,28 @@ export class Candies {
 	dragEnd() {
 		if (this.dragTarget) {
 			this.dragTarget.alpha = 1
-			const notvalid = true // TODO: check if the move is valid
+			const notvalid = false // TODO: check if the move is valid
 			if (notvalid) {
 				// return to the previous position
 				this.dragTarget.x = this.prevPos.x
 				this.dragTarget.y = this.prevPos.y
+			}
+			else { // swap the candies
+				const x = this.dragTarget.position.x
+				const y = this.dragTarget.position.y
+				let inbound = false
+				for (let info of this.gridInfo) {
+					const inXbound = x >= info.x - info.cellSize / 2 && x <= info.x + info.cellSize / 2
+					const inYbound = y >= info.y - info.cellSize / 2 && y <= info.y + info.cellSize / 2
+					if (inXbound && inYbound) {
+						inbound = true
+						this.swap(this.dragTarget, info.candy!)
+					}
+				}
+				if (!inbound) { // reset back to the previous position
+					this.dragTarget.x = this.prevPos.x
+					this.dragTarget.y = this.prevPos.y
+				}
 			}
 			this.dragTarget = null
 		}
@@ -63,10 +84,10 @@ export class Candies {
 		// this.renderer.animationLoop(this.fallDown.bind(this, candy, y))
 	}
 	swap(candy1: SPRITE, candy2: SPRITE) {
-		const x1 = candy1.x
-		const y1 = candy1.y
-		candy1.position.set(candy2.x, candy2.y)
-		candy2.position.set(x1, y1)
+		candy1.x = candy2.x
+		candy1.y = candy2.y
+		candy2.x = this.prevPos.x
+		candy2.y = this.prevPos.y
 	}
 	async fallDown(candy: SPRITE, y: number) {
 		const speed = 8
