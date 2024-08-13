@@ -56,10 +56,10 @@ export class Candies {
 		this.renderer.app.stage.off('pointermove', this.dragMove)
 	}
 	spawn(x: number, y: number, cellSize: number, candy: SPRITE) {
-		candy.position.set(x, y)
+		candy.position.set(x, 0)
 		candy.width = cellSize
 		candy.height = cellSize
-		// this.fallDown(candy, y)
+		this.fallDown(candy, y)
 		// this.renderer.animationLoop(this.fallDown.bind(this, candy, y))
 	}
 	swap(candy1: SPRITE, candy2: SPRITE) {
@@ -68,10 +68,11 @@ export class Candies {
 		candy1.position.set(candy2.x, candy2.y)
 		candy2.position.set(x1, y1)
 	}
-	fallDown(candy: SPRITE, y: number) {
+	async fallDown(candy: SPRITE, y: number) {
 		const speed = 8
 		while (candy.y <= y) {
 			candy.y += speed
+			await this.sleep(10)
 		}
 	}
 	sleep(ms: number) {
