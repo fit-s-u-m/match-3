@@ -4,3 +4,4 @@ export type ELEMENT = PIXI.Sprite | PIXI.Text | PIXI.Container | PIXI.Graphics
 export type RENDERER = Renderer
 export type SPRITE = PIXI.Sprite
 export type TEXTURE = PIXI.Texture
+export type TEXT = PIXI.Text

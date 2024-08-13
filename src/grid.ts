@@ -2,6 +2,9 @@ import { RENDERER, SPRITE, TEXTURE } from "../types";
 export class Grid {
 	gridImg: TEXTURE
 	renderer: RENDERER
+	width: number
+	height: number
+	gridPos: { x: number, y: number }
 	constructor(renderer: RENDERER) {
 		this.renderer = renderer
 	}
@@ -19,6 +22,9 @@ export class Grid {
 			x: (this.renderer.app.screen.width - (row * cellSize + (row - 1) * margin)) / 2,
 			y: (this.renderer.app.screen.height - (col * cellSize + (col - 1) * margin)) / 2
 		}
+		this.width = col * cellSize + (col - 1) * margin
+		this.height = row * cellSize + (row - 1) * margin
+		this.gridPos = { x: offset.x, y: offset.y }
 		for (let i = 0; i < row; i++) {
 			for (let j = 0; j < col; j++) {
 				const cellSprite = this.renderer.createSprite(this.gridImg)

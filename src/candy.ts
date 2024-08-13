@@ -19,7 +19,9 @@ export class Candies {
 		this.candyTextures = await Promise.all(promise)
 	}
 	createCandy(candyId: number) {
-		return this.renderer.createSprite(this.candyTextures[candyId])
+		const candy = this.renderer.createSprite(this.candyTextures[candyId])
+		candy.zIndex = 1
+		return candy
 	}
 	spawn(x: number, y: number, cellSize: number, candy: SPRITE) {
 		candy.position.set(x, 0)
