@@ -3,14 +3,27 @@ import { ELEMENT, TEXTURE } from "../types.ts"
 
 export class Renderer {
 	app: PIXI.Application
+	dragger: any
 	constructor() {
 		this.app = new PIXI.Application()
+
 	}
 	async init() {
 		await this.app.init({
 			width: window.innerWidth,
 			height: window.innerHeight
 		});
+		this.app.stage.eventMode = 'static';
+		this.app.stage.hitArea = this.app.screen;
+		this.app.stage.on('pointerup', () => {
+			if (this.dragger)
+				this.dragger.dragEnd()
+		});
+		this.app.stage.on('pointerupoutside', () => {
+			if (this.dragger)
+				this.dragger.dragEnd()
+		});
+
 		document.body.appendChild(this.app.canvas);
 
 		// setting the background
@@ -38,6 +51,9 @@ export class Renderer {
 		this.app.ticker.add(() => {
 			callback()
 		})
+	}
+	removeLoop(callback: Function) {
+		this.app.ticker.remove(() => { callback() })
 	}
 	write(text: string, x: number, y: number) {
 		const style = new PIXI.TextStyle({
