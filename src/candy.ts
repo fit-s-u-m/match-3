@@ -28,8 +28,9 @@ export class Candies {
 		this.renderer.animationLoop(this.moveDown.bind(this, candy, y))
 	}
 	moveDown(candy: SPRITE, y: number) {
-		if (candy.y != y) {
-			candy.y += 1
+		const speed = 8
+		if (candy.y <= y) {
+			candy.y += speed
 		}
 	}
 }
