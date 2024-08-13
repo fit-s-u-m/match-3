@@ -60,7 +60,7 @@ export class UI {
 		this.level = level
 		this.levelText.text = `Level ${level}`
 	}
-	updateScore(score: number) {
+	   updateScore(score: number) {
         this.score = score;
         this.scoreText.text = `Score ${score}`;
     }
