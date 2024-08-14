@@ -1,15 +1,19 @@
-import { RENDERER, TEXTURE } from "../types";
+import { RENDERER, TEXTURE, GRIDINFO} from "../types";
 export class Grid {
 	gridImg: TEXTURE
 	renderer: RENDERER
 	width: number
 	height: number
 	gridPos: { x: number, y: number }
+	gridInfo: GRIDINFO
 	constructor(renderer: RENDERER) {
 		this.renderer = renderer
 	}
 	async init() { // load spite for grid
 		this.gridImg = await this.renderer.loadAsset("assets/grid1.png");
+	}
+	checkValidity(){  // checking the whole grid    // checking the adjacent  // checking the match 
+			
 	}
 	async makeGrid(row: number, col: number) { // create grid
 		await this.init()
@@ -38,6 +42,7 @@ export class Grid {
 				grid.push({ x, y, cellSize, candyId })
 			}
 		}
+		this.gridInfo = grid
 		return grid
 	}
 }

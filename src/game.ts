@@ -28,6 +28,7 @@ export class Game {
 			info.candy = candy
 			this.renderer.stage(candy)
 		})
-		this.candies.setCandyProp(this.gridInfo)
+		this.grid.gridInfo = this.gridInfo
+		this.candies.setGrid(this.grid,this.ui)
 	}
 }
