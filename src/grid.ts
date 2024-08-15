@@ -12,7 +12,7 @@ export class Grid {
 	async init() { // load spite for grid
 		this.gridImg = await this.renderer.loadAsset("assets/grid1.png");
 	}
-	checkValidity(){  // checking the whole grid    // checking the adjacent  // checking the match 
+	checkValidity(){  // checking the whole grid   // checking the match 
 			
 	}
 	async makeGrid(row: number, col: number) { // create grid

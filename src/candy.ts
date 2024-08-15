@@ -1,5 +1,5 @@
-import { Grid } from './grid';
-import { GRIDINFO, RENDERER, SPRITE, TEXTURE , GRID,Ui} from "../types";
+// import { Grid } from './grid';
+import {  RENDERER, SPRITE, TEXTURE , GRID,Ui} from "../types";
 
 export class Candies {
 	renderer: RENDERER
@@ -37,7 +37,7 @@ export class Candies {
 		candy.alpha = 0.75
 		this.dragTarget = candy
 		this.dragTargetId = candyId
-		this.renderer.dragger = this
+		this.renderer.dragger = this	
 		this.prevPos = { x: candy.x, y: candy.y }
 		this.renderer.app.stage.on('pointermove', this.dragMove.bind(this))
 	}
