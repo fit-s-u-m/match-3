@@ -15,6 +15,23 @@ export class Grid {
 	checkValidity(){  // checking the whole grid   // checking the match 
 			
 	}
+
+
+
+	//check if two positions are adjacent
+    areAdjacent(pos1: { x: number, y: number }, pos2: { x: number, y: number }): boolean {
+        const dx = Math.abs(pos1.x - pos2.x);
+        const dy = Math.abs(pos1.y - pos2.y);
+        return (dx === 1 && dy === 0) || (dx === 0 && dy === 1);
+    }
+
+	
+	getGridPosition(position: { x: number, y: number }) {
+        // Convert screen position to grid position (row, col)
+        const row = Math.floor((position.y - this.gridPos.y) / this.gridInfo[0].cellSize);
+        const col = Math.floor((position.x - this.gridPos.x) / this.gridInfo[0].cellSize);
+        return { x: col, y: row }; // Assuming x -> col, y -> row
+    }
 	async makeGrid(row: number, col: number) { // create grid
 		await this.init()
 		const grid: { x: number, y: number, cellSize: number, candyId: number }[] = []
