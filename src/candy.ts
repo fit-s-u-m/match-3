@@ -1,15 +1,14 @@
-// import { Grid } from './grid';
-import {  RENDERER, SPRITE, TEXTURE , GRID,Ui} from "../types";
+import { RENDERER, SPRITE, TEXTURE, GRID, Ui, CANDYINFO  } from "../types";
 
 export class Candies {
 	renderer: RENDERER
 	candyTextures: TEXTURE[]
 	prevPos: { x: number, y: number } = { x: 0, y: 0 }
 	private dragTarget: SPRITE | null = null;
-	private dragTargetId: number 
-	private grid:GRID
-	private moveCounter:number = 0
-	private ui:Ui
+	private dragTargetId: number
+	private grid: GRID
+	private moveCounter: number = 0
+	private ui: Ui
 	constructor(renderer: RENDERER) {
 		this.renderer = renderer
 	}
@@ -30,10 +29,10 @@ export class Candies {
 		candy.zIndex = 1
 		candy.eventMode = 'static'
 		candy.cursor = 'pointer'
-		candy.on('pointerdown', this.startDrag.bind(this, candy,candyId))
+		candy.on('pointerdown', this.startDrag.bind(this, candy, candyId))
 		return candy
 	}
-	startDrag(candy: SPRITE,candyId:number) {
+	startDrag(candy: SPRITE, candyId: number) {
 		candy.alpha = 0.75
 		this.dragTarget = candy
 		this.dragTargetId = candyId
@@ -41,7 +40,7 @@ export class Candies {
 		this.prevPos = { x: candy.x, y: candy.y }
 		this.renderer.app.stage.on('pointermove', this.dragMove.bind(this))
 	}
-	setGrid(grid:GRID,ui:Ui) {
+	setGrid(grid: GRID, ui: Ui) {
 		this.grid = grid
 		this.ui = ui
 	}
@@ -51,27 +50,24 @@ export class Candies {
 			this.dragTarget.y = event.data.global.y - this.dragTarget.height / 2
 		}
 	}
-
-
-
-
 	dragEnd() {
 if (this.dragTarget){
 	this.dragTarget.alpha=1
-	let targetCandyInfo=null
+	let targetCandyInfo: CANDYINFO | null = null;
 
 
 
+	for (let row of this.grid.gridInfo) {
+		for (let info of row) {  // Accessing individual CANDYINFO objects
+			const inXBound = this.dragTarget.x >= info.x - info.cellSize / 2 && this.dragTarget.x <= info.x + info.cellSize / 2;
+			const inYBound = this.dragTarget.y >= info.y - info.cellSize / 2 && this.dragTarget.y <= info.y + info.cellSize / 2;
 
-	for (let info of this.grid.gridInfo){
-
-		const inXBound =this.dragTarget.x >= info.x -info.cellSize/2 && this.dragTarget.x <= info.x + info.cellSize/2
-		const inYBound =this.dragTarget.y >= info.y -info.cellSize/2 && this.dragTarget.y <= info.y + info.cellSize/2
-	
-		if(inXBound && inYBound){
-			targetCandyInfo=info;
-			break
+			if (inXBound && inYBound) {
+				targetCandyInfo = info;
+				break;
+			}
 		}
+		if (targetCandyInfo) break; // Exit outer loop if targetCandyInfo is found
 	}
 
 
@@ -123,20 +119,20 @@ this.renderer.app.stage.off('pointermove', this.dragMove)
 
 
 
+
+
 	spawn(x: number, y: number, cellSize: number, candy: SPRITE) {
 		candy.position.set(x, 0)
 		candy.width = cellSize
 		candy.height = cellSize
 		this.fallDown(candy, y)
-		// this.renderer.animationLoop(this.fallDown.bind(this, candy, y))
 	}
 	swap(candy1: SPRITE, candy2: SPRITE) {
 		candy1.x = candy2.x
 		candy1.y = candy2.y
 		candy2.x = this.prevPos.x
 		candy2.y = this.prevPos.y
-		// this.moveCounter ++
-		// this.ui.updateMove(this.moveCounter)
+
 	}
 	async fallDown(candy: SPRITE, y: number) {
 		const speed = 8

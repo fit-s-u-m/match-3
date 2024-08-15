@@ -22,13 +22,15 @@ export class Game {
 		this.gridInfo = await this.grid.makeGrid(8, 8)
 		this.ui.createCounterBoard(this.grid.gridPos, this.grid.width)
 		this.ui.createLevelBoard(this.grid.gridPos,)
-		this.gridInfo.forEach((info) => {
-			const candy = this.candies.createCandy(info.candyId)
-			this.candies.spawn(info.x, info.y, info.cellSize, candy)
-			info.candy = candy
-			this.renderer.stage(candy)
+		this.gridInfo.forEach(row => {
+			row.forEach(info => {
+				const candy = this.candies.createCandy(info.candyId)
+				this.candies.spawn(info.x, info.y, info.cellSize, candy)
+				info.candy = candy
+				this.renderer.stage(candy)
+			})
 		})
 		this.grid.gridInfo = this.gridInfo
-		this.candies.setGrid(this.grid,this.ui)
+		this.candies.setGrid(this.grid, this.ui)
 	}
 }

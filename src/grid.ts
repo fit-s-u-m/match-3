@@ -1,4 +1,4 @@
-import { RENDERER, TEXTURE, GRIDINFO} from "../types";
+import { RENDERER, TEXTURE, GRIDINFO } from "../types";
 export class Grid {
 	gridImg: TEXTURE
 	renderer: RENDERER
@@ -12,12 +12,9 @@ export class Grid {
 	async init() { // load spite for grid
 		this.gridImg = await this.renderer.loadAsset("assets/grid1.png");
 	}
-	checkValidity(){  // checking the whole grid   // checking the match 
-			
+	checkValidity() {  // checking the whole grid    // checking the adjacent  // checking the match 
+
 	}
-
-
-
 	//check if two positions are adjacent
     areAdjacent(pos1: { x: number, y: number }, pos2: { x: number, y: number }): boolean {
         const dx = Math.abs(pos1.x - pos2.x);
@@ -27,14 +24,16 @@ export class Grid {
 
 	
 	getGridPosition(position: { x: number, y: number }) {
-		
-        const row = Math.floor((position.y - this.gridPos.y) / this.gridInfo[0].cellSize);
-        const col = Math.floor((position.x - this.gridPos.x) / this.gridInfo[0].cellSize);
-        return { x: col, y: row }; // Assuming x -> col, y -> row
-    }
+		const cellSize = this.gridInfo[0][0].cellSize; 
+		const row = Math.floor((position.y - this.gridPos.y) / cellSize);
+		const col = Math.floor((position.x - this.gridPos.x) / cellSize);
+		return { x: col, y: row }; 
+	}
+	
+	
 	async makeGrid(row: number, col: number) { // create grid
 		await this.init()
-		const grid: { x: number, y: number, cellSize: number, candyId: number }[] = []
+		const grid: { x: number, y: number, cellSize: number, candyId: number }[][] = Array.from({ length: row }, () => Array(col).fill(0))
 		const margin = 10 // to create spacing
 		const cellSize = col > row ?
 			(this.renderer.app.screen.width - margin * col) / col :
@@ -56,7 +55,7 @@ export class Grid {
 				cellSprite.height = cellSize
 				this.renderer.stage(cellSprite)
 				const candyId = Math.floor(Math.random() * 6)
-				grid.push({ x, y, cellSize, candyId })
+				grid[i][j] = { x, y, cellSize, candyId }
 			}
 		}
 		this.gridInfo = grid
