@@ -1,15 +1,14 @@
-import { Grid } from './grid';
-import { GRIDINFO, RENDERER, SPRITE, TEXTURE , GRID,Ui} from "../types";
+import { RENDERER, SPRITE, TEXTURE, GRID, Ui } from "../types";
 
 export class Candies {
 	renderer: RENDERER
 	candyTextures: TEXTURE[]
 	prevPos: { x: number, y: number } = { x: 0, y: 0 }
 	private dragTarget: SPRITE | null = null;
-	private dragTargetId: number 
-	private grid:GRID
-	private moveCounter:number = 0
-	private ui:Ui
+	private dragTargetId: number
+	private grid: GRID
+	private moveCounter: number = 0
+	private ui: Ui
 	constructor(renderer: RENDERER) {
 		this.renderer = renderer
 	}
@@ -30,10 +29,10 @@ export class Candies {
 		candy.zIndex = 1
 		candy.eventMode = 'static'
 		candy.cursor = 'pointer'
-		candy.on('pointerdown', this.startDrag.bind(this, candy,candyId))
+		candy.on('pointerdown', this.startDrag.bind(this, candy, candyId))
 		return candy
 	}
-	startDrag(candy: SPRITE,candyId:number) {
+	startDrag(candy: SPRITE, candyId: number) {
 		candy.alpha = 0.75
 		this.dragTarget = candy
 		this.dragTargetId = candyId
@@ -41,7 +40,7 @@ export class Candies {
 		this.prevPos = { x: candy.x, y: candy.y }
 		this.renderer.app.stage.on('pointermove', this.dragMove.bind(this))
 	}
-	setGrid(grid:GRID,ui:Ui) {
+	setGrid(grid: GRID, ui: Ui) {
 		this.grid = grid
 		this.ui = ui
 	}
@@ -64,19 +63,20 @@ export class Candies {
 				const x = this.dragTarget.position.x
 				const y = this.dragTarget.position.y
 				let inbound = false
-				for (let info of this.grid.gridInfo) {
-					const itselfX = this.dragTarget.x == this.prevPos.x
-					const itselfY = this.dragTarget.y == this.prevPos.y
-					const inXbound = x >= info.x - info.cellSize / 2 && x <= info.x + info.cellSize / 2
-					const inYbound = y >= info.y - info.cellSize / 2 && y <= info.y + info.cellSize / 2
-					if (inXbound && inYbound && !(itselfX && itselfY)) {
-						inbound = true
-						this.swap(this.dragTarget, info.candy!)
-						const temp = info.candyId
-						info.candyId = this.dragTargetId
-						this.dragTargetId = temp
+				for (let row of this.grid.gridInfo) {
+					for (let info of row) {
 
-						
+						const itselfX = this.dragTarget.x == this.prevPos.x
+						const itselfY = this.dragTarget.y == this.prevPos.y
+						const inXbound = x >= info.x - info.cellSize / 2 && x <= info.x + info.cellSize / 2
+						const inYbound = y >= info.y - info.cellSize / 2 && y <= info.y + info.cellSize / 2
+						if (inXbound && inYbound && !(itselfX && itselfY)) {
+							inbound = true
+							this.swap(this.dragTarget, info.candy!)
+							const temp = info.candyId
+							info.candyId = this.dragTargetId
+							this.dragTargetId = temp
+						}
 					}
 				}
 				if (!inbound) { // reset back to the previous position
@@ -93,14 +93,13 @@ export class Candies {
 		candy.width = cellSize
 		candy.height = cellSize
 		this.fallDown(candy, y)
-		// this.renderer.animationLoop(this.fallDown.bind(this, candy, y))
 	}
 	swap(candy1: SPRITE, candy2: SPRITE) {
 		candy1.x = candy2.x
 		candy1.y = candy2.y
 		candy2.x = this.prevPos.x
 		candy2.y = this.prevPos.y
-		this.moveCounter ++
+		this.moveCounter++
 		this.ui.updateMove(this.moveCounter)
 	}
 	async fallDown(candy: SPRITE, y: number) {

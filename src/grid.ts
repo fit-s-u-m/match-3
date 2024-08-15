@@ -1,4 +1,4 @@
-import { RENDERER, TEXTURE, GRIDINFO} from "../types";
+import { RENDERER, TEXTURE, GRIDINFO } from "../types";
 export class Grid {
 	gridImg: TEXTURE
 	renderer: RENDERER
@@ -12,12 +12,12 @@ export class Grid {
 	async init() { // load spite for grid
 		this.gridImg = await this.renderer.loadAsset("assets/grid1.png");
 	}
-	checkValidity(){  // checking the whole grid    // checking the adjacent  // checking the match 
-			
+	checkValidity() {  // checking the whole grid    // checking the adjacent  // checking the match 
+
 	}
 	async makeGrid(row: number, col: number) { // create grid
 		await this.init()
-		const grid: { x: number, y: number, cellSize: number, candyId: number }[] = []
+		const grid: { x: number, y: number, cellSize: number, candyId: number }[][] = Array.from({ length: row }, () => Array(col).fill(0))
 		const margin = 10 // to create spacing
 		const cellSize = col > row ?
 			(this.renderer.app.screen.width - margin * col) / col :
@@ -39,7 +39,7 @@ export class Grid {
 				cellSprite.height = cellSize
 				this.renderer.stage(cellSprite)
 				const candyId = Math.floor(Math.random() * 6)
-				grid.push({ x, y, cellSize, candyId })
+				grid[i][j] = { x, y, cellSize, candyId }
 			}
 		}
 		this.gridInfo = grid
