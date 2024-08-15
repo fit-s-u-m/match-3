@@ -27,7 +27,7 @@ export class Grid {
 
 	
 	getGridPosition(position: { x: number, y: number }) {
-        // Convert screen position to grid position (row, col)
+		
         const row = Math.floor((position.y - this.gridPos.y) / this.gridInfo[0].cellSize);
         const col = Math.floor((position.x - this.gridPos.x) / this.gridInfo[0].cellSize);
         return { x: col, y: row }; // Assuming x -> col, y -> row
