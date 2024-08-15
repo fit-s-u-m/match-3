@@ -29,7 +29,7 @@ export class Grid {
 		const col = Math.floor((position.x - this.gridPos.x) / cellSize);
 		return { x: col, y: row }; 
 	}
-	
+
 	
 	async makeGrid(row: number, col: number) { // create grid
 		await this.init()

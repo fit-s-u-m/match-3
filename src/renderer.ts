@@ -27,7 +27,7 @@ export class Renderer {
 		document.body.appendChild(this.app.canvas);
 
 		// setting the background
-		const bgPath = "../public/assets/bg5.jpg"
+		const bgPath = "../public/assets/bg5-2.jpg"
 		const backgroundTexture = await PIXI.Assets.load(bgPath); //i am going to find a better color for bg texture
 		const backgroundSprite = new PIXI.Sprite(backgroundTexture);
 		backgroundSprite.zIndex = -10

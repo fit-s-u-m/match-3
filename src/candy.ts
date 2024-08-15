@@ -51,13 +51,13 @@ export class Candies {
 		}
 	}
 	dragEnd() {
-if (this.dragTarget){
-	this.dragTarget.alpha=1
-	let targetCandyInfo: CANDYINFO | null = null;
+		if (this.dragTarget){
+		this.dragTarget.alpha=1
+		let targetCandyInfo: CANDYINFO | null = null;
 
 
 
-	for (let row of this.grid.gridInfo) {
+		for (let row of this.grid.gridInfo) {
 		for (let info of row) {  // Accessing individual CANDYINFO objects
 			const inXBound = this.dragTarget.x >= info.x - info.cellSize / 2 && this.dragTarget.x <= info.x + info.cellSize / 2;
 			const inYBound = this.dragTarget.y >= info.y - info.cellSize / 2 && this.dragTarget.y <= info.y + info.cellSize / 2;
@@ -83,16 +83,28 @@ if (this.dragTarget){
             console.log('Target Grid Position:', targetGridPos);
 
 
-			const areAdjacent = this.grid.areAdjacent(prevGridPos, targetGridPos);
+   // loop to check for adjacent candies
+   let adjacent = false;
+   for (let dx = -1; dx <= 1; dx++) {
+	 for (let dy = -1; dy <= 1; dy++) {
+	   if (Math.abs(dx) + Math.abs(dy) === 1) { // Check for horizontal or vertical adjacency
+		 const adjacentGridPos = { x: prevGridPos.x + dx, y: prevGridPos.y + dy };
+		 if (adjacentGridPos.x === targetGridPos.x && adjacentGridPos.y === targetGridPos.y) {
+		   adjacent = true;
+		   break;
+		 }
+	   }
+	 }
+	 if (adjacent) break;
+   }
 
-		if(areAdjacent) {
+		if(adjacent) {
 			console.log('Candies are adjacent, swapping...');
 			this.swap (this.dragTarget,targetCandyInfo.candy)
 
-			const tempCandyId = targetCandyInfo.candyId
-			targetCandyInfo.candyId=this.dragTargetId
-			this.dragTargetId=tempCandyId
-
+			// const tempCandyId = targetCandyInfo.candyId
+			// targetCandyInfo.candyId=this.dragTargetId
+			// this.dragTargetId=tempCandyId
 
 
 
