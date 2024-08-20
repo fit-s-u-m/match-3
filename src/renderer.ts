@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js"
-import { ELEMENT, TEXTURE } from "../types.ts"
+import { ELEMENT } from "../types.ts"
 
 export class Renderer {
 	app: PIXI.Application
@@ -31,7 +31,7 @@ export class Renderer {
 
 		// setting the background
 		const bgPath = "../public/assets/bg5-2.jpg"
-		const backgroundTexture = await PIXI.Assets.load(bgPath); //i am going to find a better color for bg texture
+		const backgroundTexture = await PIXI.Assets.load(bgPath); //i am going to find a better color for bg texture 😃 you should
 		const backgroundSprite = new PIXI.Sprite(backgroundTexture);
 		backgroundSprite.zIndex = -10
 		backgroundSprite.width = this.app.screen.width
