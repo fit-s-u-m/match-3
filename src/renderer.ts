@@ -4,6 +4,9 @@ import { ELEMENT, TEXTURE } from "../types.ts"
 export class Renderer {
 	app: PIXI.Application
 	dragger: any
+	gameOverBackgroundTexture: PIXI.Texture | null = null;
+    restartTexture: PIXI.Texture | null = null;
+    restartIcon: PIXI.Sprite | null = null;
 	constructor() {
 		this.app = new PIXI.Application()
 
@@ -34,6 +37,9 @@ export class Renderer {
 		backgroundSprite.width = this.app.screen.width
 		backgroundSprite.height = this.app.screen.height
 		this.stage(backgroundSprite)
+
+		this.gameOverBackgroundTexture = await PIXI.Assets.load("public/assets/level1.png");
+		this.restartTexture = await PIXI.Assets.load("public/assets/restart.png");
 	}
 	stage(...element: ELEMENT[]) {
 		element.forEach(element => this.app.stage.addChild(element))
@@ -68,29 +74,47 @@ export class Renderer {
 		textSprite.position.set(x, y)
 		return textSprite
 	}
-    public displayGameOver() {
-        const gameOverBackground = new PIXI.Graphics();
-        gameOverBackground.beginFill(0x000000, 0.75); // Semi-transparent black
-        gameOverBackground.drawRect(0, 0, 400, 150); // Adjust size as needed
-        gameOverBackground.endFill();
-        gameOverBackground.x = this.app.screen.width / 2 - 200; // Center the background
-        gameOverBackground.y = this.app.screen.height / 2 - 75; // Center the background
-        gameOverBackground.zIndex = 9;
-
+	public displayGameOver() {
+        const gameOverBackground = new PIXI.Sprite(this.gameOverBackgroundTexture!);
+        gameOverBackground.anchor.set(0.5);
+        gameOverBackground.position.set(this.app.screen.width / 2, this.app.screen.height / 2);
+        gameOverBackground.width = 600; 
+        gameOverBackground.height = 100; 
+        gameOverBackground.zIndex = 10;
+        
         const gameOverText = new PIXI.Text('Game Over', {
             fontSize: 80,
-            fill: 'red'
+            fill: 'white',
+			fontWeight:'bold'
         });
         gameOverText.anchor.set(0.5);
         gameOverText.position.set(this.app.screen.width / 2, this.app.screen.height / 2);
-        gameOverText.zIndex = 10;
+        gameOverText.zIndex = 11;
+
+        this.restartIcon = new PIXI.Sprite(this.restartTexture!);
+        this.restartIcon.anchor.set(0.5);
+        this.restartIcon.position.set(this.app.screen.width / 2, this.app.screen.height / 2 + 150); // Adjust position as needed
+        this.restartIcon.width = 100; 
+        this.restartIcon.height = 100; 
+        this.restartIcon.zIndex = 12;
+        this.restartIcon.interactive = true;
+		(this.restartIcon as any).buttonMode = true;
+        this.restartIcon.on('pointerdown', this.onRestartClick.bind(this));
 
         this.app.stage.addChild(gameOverBackground);
         this.app.stage.addChild(gameOverText);
-        this.app.stage.sortChildren(); // Ensure proper layering
+        this.app.stage.addChild(this.restartIcon);
+        this.app.stage.sortChildren();
+    }
+
+    onRestartClick() {
+        
+        location.reload(); // for now Reload the page to restart the game
     }
 
     setColor(sprite: PIXI.Sprite, color: number) {
         sprite.tint = color;
     }
+
+	
 }

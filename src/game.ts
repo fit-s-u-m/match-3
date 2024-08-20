@@ -38,7 +38,7 @@ export class Game {
 		this.renderer.animationLoop(() => {
 			if (!this.gameOver) {
 				this.grid.fillCol(this.grid.checkGrid(), this.candies)
-				this.moveCounter = this.ui.getMoveCount() // Fetch the move count from UI
+				this.moveCounter = this.ui.getMoveCount() 
 				if (this.moveCounter >= this.moveLimit) {
 					this.gameOver = true
 					this.handleGameOver()

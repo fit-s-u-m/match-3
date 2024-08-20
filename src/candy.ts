@@ -9,7 +9,7 @@ export class Candies {
 	private grid: GRID
 	private moveCounter: number = 0
 	private ui: Ui
-	private gameOver: boolean = false; // Add this flag
+	private gameOver: boolean = false; 
 
 	constructor(renderer: RENDERER) {
 		this.renderer = renderer
@@ -150,8 +150,8 @@ export class Candies {
         this.grid.gridInfo.forEach(row => {
             row.forEach(info => {
                 if (info.candy) {
-                    // Fade out effect
-                    let fadeOut = 0.5; // Change this value to adjust the fade effect
+                   
+                    let fadeOut = 0.5; 
                     info.candy.alpha = fadeOut;
                 }
             });
