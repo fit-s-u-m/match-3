@@ -92,11 +92,13 @@ export class Grid {
 				if (this.gridInfo[r][c].candyId == -1) { // Empty slot
 					emptyCount++;
 				} else if (emptyCount > 0) {
+					console.log(emptyCount)
 					// Move the candy down by the number of empty slots below
 					const candyMoving = this.gridInfo[r][c]
 					const candyMovingTo = this.gridInfo[r + emptyCount][c]
-					if (candyMoving.candy) {
-						await candies.fallDown(candyMoving.candy, candyMovingTo.y, 1)
+					if (candyMoving.candy && candyMovingTo.y) {
+						// candyMoving.candy.position.y = candyMovingTo.y
+						await candies.fallDown(candyMoving.candy, candyMovingTo.y, 6)
 					}
 					// Set the new slot
 					this.gridInfo[r + emptyCount][c].candyId = candyMoving.candyId;

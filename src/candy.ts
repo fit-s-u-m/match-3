@@ -1,4 +1,3 @@
-import { Texture } from "pixi.js";
 import { RENDERER, SPRITE, TEXTURE, GRID, Ui, CANDYINFO } from "../types";
 
 export class Candies {
@@ -6,7 +5,6 @@ export class Candies {
 	candyTextures: TEXTURE[]
 	prevPos: { x: number, y: number } = { x: 0, y: 0 }
 	private dragTarget: SPRITE | null = null;
-	private dragTargetId: number
 	private grid: GRID
 	private moveCounter: number = 0
 	private ui: Ui
@@ -30,13 +28,12 @@ export class Candies {
 		candy.zIndex = 1
 		candy.eventMode = 'static'
 		candy.cursor = 'pointer'
-		candy.on('pointerdown', this.startDrag.bind(this, candy, candyId))
+		candy.on('pointerdown', this.startDrag.bind(this, candy))
 		return candy
 	}
-	startDrag(candy: SPRITE, candyId: number) {
+	startDrag(candy: SPRITE) {
 		candy.alpha = 0.75
 		this.dragTarget = candy
-		this.dragTargetId = candyId
 		this.renderer.dragger = this
 		this.prevPos = { x: candy.x, y: candy.y }
 		this.renderer.app.stage.on('pointermove', this.dragMove.bind(this))
@@ -131,11 +128,6 @@ export class Candies {
 	changeTexture(candy: SPRITE, texture: TEXTURE) {
 		candy.texture = texture
 	}
-
-
-
-
-
 	spawn(x: number, y: number, cellSize: number, candy: SPRITE) {
 		candy.position.set(x, 0)
 		candy.width = cellSize
@@ -150,7 +142,7 @@ export class Candies {
 		candy1.x = this.prevPos.x
 		candy1.y = this.prevPos.y
 	}
-	async fallDown(candy: SPRITE, y: number, time = 10) {
+	async fallDown(candy: SPRITE, y: number, time = 6) {
 		const speed = 8
 		if (candy.position.y < y) {
 			while (candy.y <= y) {
