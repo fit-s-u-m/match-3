@@ -138,7 +138,7 @@ export class Grid {
 		const cellSize = this.gridInfo[0][0].cellSize;
 		const row = Math.floor((position.y - this.gridPos.y) / cellSize);
 		const col = Math.floor((position.x - this.gridPos.x) / cellSize);
-		return { x: col, y: row };
+		return { r: row, c: col };
 	}
 
 
