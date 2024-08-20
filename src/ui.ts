@@ -2,10 +2,10 @@ import { RENDERER, TEXT, TEXTURE } from '../types';
 export class UI {
 	renderer: RENDERER;
 	boardTexture: TEXTURE
-	time: number = 0
+	move: number = 0
 	level: number = 1
 	score: number = 0
-	timerText: TEXT
+	moveText: TEXT
 	levelText: TEXT
 	
 	scoreText: TEXT
@@ -23,8 +23,8 @@ export class UI {
 		boardbg.position.set(gridEnd, gridPos.y+margin);
 		boardbg.width = window.innerWidth - gridEnd - margin;
 		boardbg.height = 100;
-		const text = this.renderer.write(`Move : ${this.time}`, boardbg.position.x + boardbg.width / 2 , boardbg.position.y + boardbg.height / 2)
-		this.timerText = text
+		const text = this.renderer.write(`Move : ${this.move}`, boardbg.position.x + boardbg.width / 2 , boardbg.position.y + boardbg.height / 2)
+		this.moveText = text
 		text.zIndex = 1
 		this.renderer.stage(boardbg, text);
 	}
@@ -53,8 +53,8 @@ export class UI {
 		this.renderer.stage(boardbg, text, scoreBoardbg, scoreText);
 	}
 	updateMove(move: number) {
-		this.time = move
-		this.timerText.text = `Move : ${move}`
+		this.move = move
+		this.moveText.text = `Move : ${move}`
 	}
 	updateLevel(level: number) {
 		this.level = level
@@ -64,4 +64,7 @@ export class UI {
         this.score = score;
         this.scoreText.text = `Score :x ${score}`;
     }
+	getMoveCount() {
+		return this.move
+	}
 }

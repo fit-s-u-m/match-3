@@ -9,6 +9,8 @@ export class Candies {
 	private grid: GRID
 	private moveCounter: number = 0
 	private ui: Ui
+	private gameOver: boolean = false; // Add this flag
+
 	constructor(renderer: RENDERER) {
 		this.renderer = renderer
 	}
@@ -33,6 +35,7 @@ export class Candies {
 		return candy
 	}
 	startDrag(candy: SPRITE, candyId: number) {
+		if (this.gameOver) return;
 		candy.alpha = 0.75
 		this.dragTarget = candy
 		this.dragTargetId = candyId
@@ -44,13 +47,13 @@ export class Candies {
 		this.grid = grid
 		this.ui = ui
 	}
-	dragMove(event: any) {
-		if (this.dragTarget) {
-			this.dragTarget.x = event.data.global.x - this.dragTarget.width / 2
-			this.dragTarget.y = event.data.global.y - this.dragTarget.height / 2
-		}
-	}
+    dragMove(event: any) {
+        if (this.gameOver || !this.dragTarget) return; // Prevent movement if game is over
+        this.dragTarget.x = event.data.global.x - this.dragTarget.width / 2;
+        this.dragTarget.y = event.data.global.y - this.dragTarget.height / 2;
+    }
 	dragEnd() {
+		if (this.gameOver) return;
 		if (this.dragTarget) {
 			this.dragTarget.alpha = 1
 			let targetCandyInfo: CANDYINFO | null = null;
@@ -111,6 +114,9 @@ export class Candies {
 
 					this.moveCounter++;
 					this.ui.updateMove(this.moveCounter);
+
+
+					
 				} else {
 					console.log('Candies are not adjacent, reverting...');
 
@@ -139,7 +145,18 @@ export class Candies {
 	}
 
 
-
+    setGameOver() {
+		this.gameOver = true; 
+        this.grid.gridInfo.forEach(row => {
+            row.forEach(info => {
+                if (info.candy) {
+                    // Fade out effect
+                    let fadeOut = 0.5; // Change this value to adjust the fade effect
+                    info.candy.alpha = fadeOut;
+                }
+            });
+        });
+    }
 
 
 	spawn(x: number, y: number, cellSize: number, candy: SPRITE) {

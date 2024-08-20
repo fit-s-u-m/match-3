@@ -11,6 +11,9 @@ export class Game {
 	gridInfo: GRIDINFO
 	candies: Candies
 	ui: UI
+	moveLimit: number = 4
+	moveCounter: number = 0
+	gameOver: boolean = false
 	constructor() {
 		this.renderer = new Renderer()
 		this.grid = new Grid(this.renderer)
@@ -33,10 +36,19 @@ export class Game {
 		this.grid.gridInfo = this.gridInfo
 		this.candies.setGrid(this.grid, this.ui)
 		this.renderer.animationLoop(() => {
-			this.grid.fillCol(
-				this.grid.checkGrid(),
-				this.candies
-			)
+			if (!this.gameOver) {
+				this.grid.fillCol(this.grid.checkGrid(), this.candies)
+				this.moveCounter = this.ui.getMoveCount() // Fetch the move count from UI
+				if (this.moveCounter >= this.moveLimit) {
+					this.gameOver = true
+					this.handleGameOver()
+				}
+			}
 		})
+	}
+
+	handleGameOver() {
+		this.renderer.displayGameOver();
+		this.candies.setGameOver();
 	}
 }
