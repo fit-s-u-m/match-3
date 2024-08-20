@@ -12,3 +12,5 @@ export type CANDYINFO = { x: number, y: number, cellSize: number, candyId: numbe
 export type GRIDINFO = CANDYINFO[][]
 export type GRID = Grid
 export type Ui = UI
+export type DIRECTION = "vertical" | "horizontal"
+export type MATCH = { startIndex: { r: number, c: number }, count: number, direction: DIRECTION, candyId: number }

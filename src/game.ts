@@ -32,5 +32,11 @@ export class Game {
 		})
 		this.grid.gridInfo = this.gridInfo
 		this.candies.setGrid(this.grid, this.ui)
+		this.renderer.animationLoop(() => {
+			this.grid.fillCol(
+				this.grid.checkGrid(),
+				this.candies
+			)
+		})
 	}
 }
