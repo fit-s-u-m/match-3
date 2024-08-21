@@ -85,9 +85,9 @@ export class Grid {
 			}
 		}
 
-		// Step 2: Shift candies down in columns that had matches
 		for (let c of colToClear) {
 			let emptyCount = 0;
+			// Shift candies down in columns that had matches
 			for (let r = this.gridInfo.length - 1; r >= 0; r--) {
 				if (this.gridInfo[r][c].candyId == -1) { // Empty slot
 					emptyCount++;
@@ -108,10 +108,7 @@ export class Grid {
 					this.gridInfo[r][c].candy = undefined;
 				}
 			}
-		}
-
-		// Step 3: spawn new candies
-		for (let c of colToClear) {
+			// spawn new candies
 			for (let r = 0; r < this.gridInfo.length; r++) {
 				if (this.gridInfo[r][c].candyId == -1) { // is empty
 					const candyId = Math.floor(Math.random() * 6)
@@ -125,7 +122,6 @@ export class Grid {
 					break
 			}
 		}
-
 	}
 	getGridPosition(position: { x: number, y: number }) {
 		const cellSize = this.gridInfo[0][0].cellSize;
