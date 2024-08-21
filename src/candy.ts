@@ -8,6 +8,8 @@ export class Candies {
 	private grid: GRID
 	private moveCounter: number = 0
 	private ui: Ui
+	private gameOver: boolean = false;
+
 	constructor(renderer: RENDERER) {
 		this.renderer = renderer
 	}
@@ -32,6 +34,7 @@ export class Candies {
 		return candy
 	}
 	startDrag(candy: SPRITE) {
+		if (this.gameOver) return;
 		candy.alpha = 0.75
 		this.dragTarget = candy
 		this.renderer.dragger = this
@@ -43,12 +46,12 @@ export class Candies {
 		this.ui = ui
 	}
 	dragMove(event: any) {
-		if (this.dragTarget) {
-			this.dragTarget.x = event.data.global.x - this.dragTarget.width / 2
-			this.dragTarget.y = event.data.global.y - this.dragTarget.height / 2
-		}
+		if (this.gameOver || !this.dragTarget) return; // Prevent movement if game is over
+		this.dragTarget.x = event.data.global.x - this.dragTarget.width / 2;
+		this.dragTarget.y = event.data.global.y - this.dragTarget.height / 2;
 	}
 	dragEnd() {
+		if (this.gameOver) return;
 		if (this.dragTarget) {
 			this.dragTarget.alpha = 1
 			let targetCandyInfo: CANDYINFO | null = null;
@@ -71,12 +74,6 @@ export class Candies {
 				const prevGridPos = this.grid.getGridPosition(this.prevPos);
 				const targetGridPos = this.grid.getGridPosition({ x: targetCandyInfo.x, y: targetCandyInfo.y });
 
-
-				console.log('Checking swap between candies...');
-				console.log('Previous Grid Position:', prevGridPos);
-				console.log('Target Grid Position:', targetGridPos);
-
-
 				// loop to check for adjacent candies
 				let adjacent = false;
 				for (let dx = -1; dx <= 1; dx++) {
@@ -93,19 +90,17 @@ export class Candies {
 				}
 
 				if (adjacent) {
-					console.log('Candies are adjacent, swapping...');
 					this.swap(this.dragTarget, targetCandyInfo.candy) // swaps the candies
 
 					// swaping the ids
 					const temp = this.grid.gridInfo[targetGridPos.r][targetGridPos.c].candyId
 					this.grid.gridInfo[targetGridPos.r][targetGridPos.c].candyId = this.grid.gridInfo[prevGridPos.r][prevGridPos.c].candyId
-					console.log(temp, this.grid.gridInfo[prevGridPos.r][prevGridPos.c].candyId)
 					this.grid.gridInfo[prevGridPos.r][prevGridPos.c].candyId = temp
 
 					this.moveCounter++;
 					this.ui.updateMove(this.moveCounter);
+
 				} else {
-					console.log('Candies are not adjacent, reverting...');
 
 					this.dragTarget.x = this.prevPos.x
 					this.dragTarget.y = this.prevPos.y
@@ -128,6 +123,19 @@ export class Candies {
 	changeTexture(candy: SPRITE, texture: TEXTURE) {
 		candy.texture = texture
 	}
+	setGameOver() {
+		this.gameOver = true;
+		this.grid.gridInfo.forEach(row => {
+			row.forEach(info => {
+				if (info.candy) {
+
+					let fadeOut = 0.5;
+					info.candy.alpha = fadeOut;
+				}
+			});
+		});
+	}
+
 	spawn(x: number, y: number, cellSize: number, candy: SPRITE) {
 		candy.position.set(x, 0)
 		candy.width = cellSize

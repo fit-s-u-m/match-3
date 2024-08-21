@@ -127,15 +127,6 @@ export class Grid {
 		}
 
 	}
-
-	//check if two positions are adjacent
-	areAdjacent(pos1: { x: number, y: number }, pos2: { x: number, y: number }): boolean {
-		const dx = Math.abs(pos1.x - pos2.x);
-		const dy = Math.abs(pos1.y - pos2.y);
-		return (dx === 1 && dy === 0) || (dx === 0 && dy === 1);
-	}
-
-
 	getGridPosition(position: { x: number, y: number }) {
 		const cellSize = this.gridInfo[0][0].cellSize;
 		const row = Math.floor((position.y - this.gridPos.y) / cellSize);
