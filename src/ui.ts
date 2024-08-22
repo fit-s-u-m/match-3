@@ -79,27 +79,27 @@ export class UI {
 	}
 
 	createGameOverScreen() {
+		const verticalOffset = 250;
 		const gameOverBackground = this.renderer.createGameOverBackground(
 			this.gameOverBackgroundTexture,
 			600, // Width
-			100 // Height
+			100 ,// Height
+			verticalOffset
 		);
 
 		const gameOverText = this.renderer.createGameOverText(
 			"Game Over",
 			this.renderer.app.screen.width / 2,
-			this.renderer.app.screen.height / 2
+			this.renderer.app.screen.height / 2 - verticalOffset,
 		);
 
 		const restartIcon = this.renderer.createRestartButton(
 			this.restartTexture,
 			100, // Width
 			100, // Height
-			{
-				x: this.renderer.app.screen.width / 2,
-				y: this.renderer.app.screen.height / 2 + 150,
-			}
-		);
+			{ x: this.renderer.app.screen.width / 2, y: this.renderer.app.screen.height / 2 + 150 },
+			verticalOffset
+		  );
 
 		restartIcon.on("pointerdown", this.onRestartClick.bind(this));
 

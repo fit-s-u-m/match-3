@@ -85,7 +85,7 @@ export class Renderer {
 			align: "center",
 		});
 
-		const gameOverText = new PIXI.Text(text, style);
+		const gameOverText = new PIXI.Text({text, style});
 		gameOverText.anchor.set(0.5);
 		gameOverText.position.set(x, y);
 		gameOverText.zIndex = 11;
@@ -95,13 +95,14 @@ export class Renderer {
 	createGameOverBackground(
 		texture: PIXI.Texture,
 		width: number,
-		height: number
+		height: number,
+		verticalOffset: number = 0
 	) {
 		const gameOverBackground = new PIXI.Sprite(texture);
 		gameOverBackground.anchor.set(0.5);
 		gameOverBackground.position.set(
 			this.app.screen.width / 2,
-			this.app.screen.height / 2
+			this.app.screen.height / 2- verticalOffset
 		);
 		gameOverBackground.width = width;
 		gameOverBackground.height = height;
@@ -113,11 +114,12 @@ export class Renderer {
 		texture: PIXI.Texture,
 		width: number,
 		height: number,
-		position: { x: number; y: number }
+		position: { x: number; y: number },
+		verticalOffset: number = 0
 	) {
 		const restartIcon = new PIXI.Sprite(texture);
 		restartIcon.anchor.set(0.5);
-		restartIcon.position.set(position.x, position.y);
+		restartIcon.position.set(position.x, position.y- verticalOffset);
 		restartIcon.width = width;
 		restartIcon.height = height;
 		restartIcon.zIndex = 12;
