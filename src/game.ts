@@ -10,7 +10,7 @@ export class Game {
 	gridInfo: GRIDINFO;
 	candies: Candies;
 	ui: UI;
-	moveLimit: number = 100;
+	moveLimit: number = 4;
 	moveCounter: number = 0;
 	gameOver: boolean = false;
 	constructor() {
@@ -51,7 +51,7 @@ export class Game {
 	}
 
 	handleGameOver() {
-		this.renderer.displayGameOver();
+		this.ui.createGameOverScreen();
 		this.candies.setGameOver();
 	}
 }

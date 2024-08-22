@@ -98,10 +98,11 @@ export class Grid {
 		}
 		return countH > 2 || countV > 2
 	}
-	checkGrid() {  // checking the whole grid   
-		let matches: MATCH[] = []
-		const numRows = this.gridInfo.length
-		const numCols = this.gridInfo[0].length
+	checkGrid() {
+		// checking the whole grid
+		let matches: MATCH[] = [];
+		const numRows = this.gridInfo.length;
+		const numCols = this.gridInfo[0].length;
 		for (let r = 0; r < numRows; r++) {
 			let match: MATCH[] = [];
 			for (let c = 0; c < numCols; c++) {

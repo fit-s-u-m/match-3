@@ -29,7 +29,7 @@ export class Renderer {
 
 		// setting the background
 		const bgPath = "../public/assets/bg5-2.jpg";
-		const backgroundTexture = await PIXI.Assets.load(bgPath);
+		const backgroundTexture = await PIXI.Assets.load(bgPath); //i am going to find a better color for bg texture
 		const backgroundSprite = new PIXI.Sprite(backgroundTexture);
 		backgroundSprite.zIndex = -10;
 		backgroundSprite.width = this.app.screen.width;
@@ -85,55 +85,56 @@ export class Renderer {
 		textSprite.position.set(x, y);
 		return textSprite;
 	}
-	displayGameOver() {
-		const gameOverBackground = new PIXI.Sprite(
-			this.gameOverBackgroundTexture!
-		);
+
+	createGameOverText(text: string, x: number, y: number) {
+		const style = new PIXI.TextStyle({
+			fill: "white",
+			fontSize: 80,
+			fontFamily: "Arial",
+			fontWeight: "bold",
+			align: "center",
+		});
+
+		const gameOverText = new PIXI.Text({ text, style });
+		gameOverText.anchor.set(0.5);
+		gameOverText.position.set(x, y);
+		gameOverText.zIndex = 11;
+		return gameOverText;
+	}
+
+	createGameOverBackground(
+		texture: PIXI.Texture,
+		width: number,
+		height: number,
+		verticalOffset: number = 0
+	) {
+		const gameOverBackground = new PIXI.Sprite(texture);
 		gameOverBackground.anchor.set(0.5);
 		gameOverBackground.position.set(
 			this.app.screen.width / 2,
-			this.app.screen.height / 2
+			this.app.screen.height / 2 - verticalOffset
 		);
-		gameOverBackground.width = 600;
-		gameOverBackground.height = 100;
+		gameOverBackground.width = width;
+		gameOverBackground.height = height;
 		gameOverBackground.zIndex = 10;
-
-		const gameOverText = new PIXI.Text("Game Over", {
-			fontSize: 80,
-			fill: "white",
-			fontWeight: "bold",
-		});
-		gameOverText.anchor.set(0.5);
-		gameOverText.position.set(
-			this.app.screen.width / 2,
-			this.app.screen.height / 2
-		);
-		gameOverText.zIndex = 11;
-
-		this.restartIcon = new PIXI.Sprite(this.restartTexture!);
-		this.restartIcon.anchor.set(0.5);
-		this.restartIcon.position.set(
-			this.app.screen.width / 2,
-			this.app.screen.height / 2 + 150
-		); // Adjust position as needed
-		this.restartIcon.width = 100;
-		this.restartIcon.height = 100;
-		this.restartIcon.zIndex = 12;
-		this.restartIcon.interactive = true;
-		(this.restartIcon as any).buttonMode = true;
-		this.restartIcon.on("pointerdown", this.onRestartClick.bind(this));
-
-		this.app.stage.addChild(gameOverBackground);
-		this.app.stage.addChild(gameOverText);
-		this.app.stage.addChild(this.restartIcon);
-		this.app.stage.sortChildren();
+		return gameOverBackground;
 	}
 
-	onRestartClick() {
-		location.reload(); // for now Reload the page to restart the game
-	}
-
-	setColor(sprite: PIXI.Sprite, color: number) {
-		sprite.tint = color;
+	createRestartButton(
+		texture: PIXI.Texture,
+		width: number,
+		height: number,
+		position: { x: number; y: number },
+		verticalOffset: number = 0
+	) {
+		const restartIcon = new PIXI.Sprite(texture);
+		restartIcon.anchor.set(0.5);
+		restartIcon.position.set(position.x, position.y - verticalOffset);
+		restartIcon.width = width;
+		restartIcon.height = height;
+		restartIcon.zIndex = 12;
+		restartIcon.interactive = true;
+		(restartIcon as any).buttonMode = true;
+		return restartIcon;
 	}
 }

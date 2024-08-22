@@ -45,6 +45,7 @@ export class Candies {
 		this.grid = grid;
 		this.ui = ui;
 	}
+
 	dragMove(event: any) {
 		if (this.gameOver || !this.dragTarget) return; // Prevent movement if game is over
 		this.dragTarget.x = event.data.global.x - this.dragTarget.width / 2;
