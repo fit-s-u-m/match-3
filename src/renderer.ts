@@ -58,7 +58,7 @@ export class Renderer {
 		let elapsedData = 0;
 		this.app.ticker.add((delta) => {
 			elapsedData += delta.deltaMS;
-			if (elapsedData > 800) {
+			if (elapsedData > 700) {
 				callback();
 				elapsedData = 0;
 			}
