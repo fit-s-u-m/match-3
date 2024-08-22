@@ -60,7 +60,7 @@ export class Grid {
 		// check right
 		for (let i = tc + 1; i < this.gridInfo[tr].length; i++) {
 			if (i < 0) break
-			if (i == pc && tr == pr) break
+			if (i == pc && tr == pr) break// don't check with the previous candy
 			if (!this.checkValidity("horizontal", matchHorizontal, tr, i)) break
 			countH++
 		}
@@ -78,7 +78,7 @@ export class Grid {
 		}
 		// check bottom
 		for (let i = tr + 1; i < this.gridInfo[tr].length; i++) {
-			if (i == pr && tc == pc) break
+			if (i == pr && tc == pc) break // don't check with the previous candy
 			if (!this.checkValidity("vertical", matchVertical, i, tc)) break
 			countV++
 		}
@@ -121,28 +121,37 @@ export class Grid {
 	async fillCol(matches: MATCH[], candies: Candies) {
 		if (matches.length == 0) return
 		let colToClear: Set<number> = new Set()
-		// Step 1: Clear matched candies and collect columns to clear
-		for (let item of matches) {
-			for (let count = 0; count < item.count; count++) {
-				const row = item.direction == "vertical"
-					? item.startIndex.r + count
-					: item.startIndex.r;
-				const col = item.direction == "horizontal"
-					? item.startIndex.c + count
-					: item.startIndex.c;
 
-				const candy = this.gridInfo[row][col].candy;
-				if (candy) {
-					candy.destroy()
-					this.gridInfo[row][col].candyId = -1;
-					this.gridInfo[row][col].candy = undefined;
-					colToClear.add(col);
-				}
-			}
-		}
+		// Step 1: Clear matched candies and collect columns to clear
+		const matchPromises = matches.map((match: MATCH) => {
+			return new Promise<void>(resolve => {
+				this.clearMatched(match, colToClear)
+				resolve()
+			})
+		})
+		await Promise.all(matchPromises);
+
 		const columns = Array.from(colToClear);
 		const columnPromises = columns.map((column: number) => this.spawnAndFill(column, candies));
 		await Promise.all(columnPromises);
+	}
+	clearMatched(item: MATCH, colToClear: Set<number> = new Set()) { // has side effect
+		for (let count = 0; count < item.count; count++) {
+			const row = item.direction == "vertical"
+				? item.startIndex.r + count
+				: item.startIndex.r;
+			const col = item.direction == "horizontal"
+				? item.startIndex.c + count
+				: item.startIndex.c;
+
+			const candy = this.gridInfo[row][col].candy;
+			if (candy) {
+				candy.destroy()
+				this.gridInfo[row][col].candyId = -1;
+				this.gridInfo[row][col].candy = undefined;
+				colToClear.add(col);
+			}
+		}
 	}
 	async spawnAndFill(column: number, candies: Candies) {
 
@@ -156,7 +165,7 @@ export class Grid {
 				const candyMoving = this.gridInfo[r][column]
 				const candyMovingTo = this.gridInfo[r + emptyCount][column]
 				if (candyMoving.candy && candyMovingTo.y) {
-					await candies.fallDown(candyMoving.candy, candyMovingTo.y, 6)
+					await candies.fallDown(candyMoving.candy, candyMovingTo.y, 3)
 				}
 				// Set the new slot
 				this.gridInfo[r + emptyCount][column].candyId = candyMoving.candyId;
