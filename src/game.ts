@@ -5,7 +5,6 @@ import { UI } from "./ui";
 import { GRIDINFO } from "../types";
 
 export class Game {
-<<<<<<< HEAD
 	renderer: Renderer;
 	grid: Grid;
 	gridInfo: GRIDINFO;
@@ -14,16 +13,6 @@ export class Game {
 	moveLimit: number = 4;
 	moveCounter: number = 0;
 	gameOver: boolean = false;
-=======
-	renderer: Renderer
-	grid: Grid
-	gridInfo: GRIDINFO
-	candies: Candies
-	ui: UI
-	moveLimit: number = 100
-	moveCounter: number = 0
-	gameOver: boolean = false
->>>>>>> dev
 	constructor() {
 		this.renderer = new Renderer();
 		this.grid = new Grid(this.renderer);
@@ -51,13 +40,8 @@ export class Game {
 		this.candies.setGrid(this.grid, this.ui);
 		this.renderer.animationLoop(() => {
 			if (!this.gameOver) {
-<<<<<<< HEAD
 				this.grid.fillCol(this.grid.checkGrid(), this.candies);
 				this.moveCounter = this.ui.getMoveCount();
-=======
-				this.grid.fillCol(this.grid.checkGrid(), this.candies)
-				this.moveCounter = this.ui.getMoveCount()
->>>>>>> dev
 				if (this.moveCounter >= this.moveLimit) {
 					this.gameOver = true;
 					this.handleGameOver();
