@@ -77,13 +77,6 @@ export class Candies {
 		const targetGridPos = this.grid.getGridPosition({ x: targetCandyInfo.x, y: targetCandyInfo.y });
 		const dragId = this.grid.gridInfo[prevGridPos.r][prevGridPos.c].candyId;
 
-
-		if (!this.grid.checkMove(targetGridPos, prevGridPos, dragId)) {
-			this.revertDrag()
-			console.log("not a match move")
-			return;
-		}
-
 		// loop to check for adjacent candies
 		let adjacent = false;
 		for (let dx = -1; dx <= 1; dx++) {
@@ -101,6 +94,11 @@ export class Candies {
 		if (!adjacent || !targetCandyInfo.candy) {
 			console.log('Not adjacent, reverting...');
 			this.revertDrag()
+			return;
+		}
+		if (!this.grid.checkMove(targetGridPos, prevGridPos, dragId)) {
+			this.revertDrag()
+			console.log("not a match move")
 			return;
 		}
 
