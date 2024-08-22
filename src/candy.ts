@@ -51,71 +51,79 @@ export class Candies {
 		this.dragTarget.y = event.data.global.y - this.dragTarget.height / 2;
 	}
 	dragEnd() {
-		if (this.gameOver) return;
-		if (this.dragTarget) {
-			this.dragTarget.alpha = 1
-			let targetCandyInfo: CANDYINFO | null = null;
+		if (this.gameOver || !this.dragTarget) return;
 
-			for (let row of this.grid.gridInfo) {
-				for (let info of row) {  // Accessing individual CANDYINFO objects
-					const inXBound = this.dragTarget.x >= info.x - info.cellSize / 2 && this.dragTarget.x <= info.x + info.cellSize / 2;
-					const inYBound = this.dragTarget.y >= info.y - info.cellSize / 2 && this.dragTarget.y <= info.y + info.cellSize / 2;
+		this.dragTarget.alpha = 1
+		let targetCandyInfo: CANDYINFO | null = null;
 
-					if (inXBound && inYBound) {
-						targetCandyInfo = info;
+		for (let row of this.grid.gridInfo) {
+			for (let info of row) {  // Accessing individual CANDYINFO objects
+				const inXBound = this.dragTarget.x >= info.x - info.cellSize / 2 && this.dragTarget.x <= info.x + info.cellSize / 2;
+				const inYBound = this.dragTarget.y >= info.y - info.cellSize / 2 && this.dragTarget.y <= info.y + info.cellSize / 2;
+
+				if (inXBound && inYBound) {
+					targetCandyInfo = info;
+					break;
+				}
+			}
+			if (targetCandyInfo) break; // Exit outer loop if targetCandyInfo is found
+		}
+		if (!targetCandyInfo) {
+			console.log('No valid target found, reverting...');
+			this.revertDrag()
+			return;
+		}
+		const prevGridPos = this.grid.getGridPosition(this.prevPos);
+		const targetGridPos = this.grid.getGridPosition({ x: targetCandyInfo.x, y: targetCandyInfo.y });
+		const dragId = this.grid.gridInfo[prevGridPos.r][prevGridPos.c].candyId;
+
+
+		if (!this.grid.checkMove(targetGridPos, prevGridPos, dragId)) {
+			this.revertDrag()
+			console.log("not a match move")
+			return;
+		}
+
+		// loop to check for adjacent candies
+		let adjacent = false;
+		for (let dx = -1; dx <= 1; dx++) {
+			for (let dy = -1; dy <= 1; dy++) {
+				if (Math.abs(dx) + Math.abs(dy) === 1) { // Check for horizontal or vertical adjacency
+					const adjacentGridPos = { c: prevGridPos.c + dx, r: prevGridPos.r + dy };
+					if (adjacentGridPos.c === targetGridPos.c && adjacentGridPos.r === targetGridPos.r) {
+						adjacent = true;
 						break;
 					}
 				}
-				if (targetCandyInfo) break; // Exit outer loop if targetCandyInfo is found
 			}
-
-			if (targetCandyInfo && targetCandyInfo.candy) {
-
-				const prevGridPos = this.grid.getGridPosition(this.prevPos);
-				const targetGridPos = this.grid.getGridPosition({ x: targetCandyInfo.x, y: targetCandyInfo.y });
-
-				// loop to check for adjacent candies
-				let adjacent = false;
-				for (let dx = -1; dx <= 1; dx++) {
-					for (let dy = -1; dy <= 1; dy++) {
-						if (Math.abs(dx) + Math.abs(dy) === 1) { // Check for horizontal or vertical adjacency
-							const adjacentGridPos = { c: prevGridPos.c + dx, r: prevGridPos.r + dy };
-							if (adjacentGridPos.c === targetGridPos.c && adjacentGridPos.r === targetGridPos.r) {
-								adjacent = true;
-								break;
-							}
-						}
-					}
-					if (adjacent) break;
-				}
-
-				if (adjacent) {
-					this.swap(this.dragTarget, targetCandyInfo.candy) // swaps the candies
-
-					// swaping the ids
-					const temp = this.grid.gridInfo[targetGridPos.r][targetGridPos.c].candyId
-					this.grid.gridInfo[targetGridPos.r][targetGridPos.c].candyId = this.grid.gridInfo[prevGridPos.r][prevGridPos.c].candyId
-					this.grid.gridInfo[prevGridPos.r][prevGridPos.c].candyId = temp
-
-					this.moveCounter++;
-					this.ui.updateMove(this.moveCounter);
-
-				} else {
-
-					this.dragTarget.x = this.prevPos.x
-					this.dragTarget.y = this.prevPos.y
-				}
-
-			} else {
-				console.log('No valid target found, reverting...');
-				this.dragTarget.x = this.prevPos.x
-				this.dragTarget.y = this.prevPos.y
-			}
-
-			this.dragTarget = null
+			if (adjacent) break;
+		}
+		if (!adjacent || !targetCandyInfo.candy) {
+			console.log('Not adjacent, reverting...');
+			this.revertDrag()
+			return;
 		}
 
+		this.swap(this.dragTarget, targetCandyInfo.candy) // swaps the candies
+
+		// swaping the ids
+		const temp = this.grid.gridInfo[targetGridPos.r][targetGridPos.c].candyId
+		this.grid.gridInfo[targetGridPos.r][targetGridPos.c].candyId = this.grid.gridInfo[prevGridPos.r][prevGridPos.c].candyId
+		this.grid.gridInfo[prevGridPos.r][prevGridPos.c].candyId = temp
+
+		this.moveCounter++;
+		this.ui.updateMove(this.moveCounter);
+
+		this.dragTarget = null
 		this.renderer.app.stage.off('pointermove', this.dragMove)
+	}
+	revertDrag() {
+		if (this.dragTarget) {
+			this.dragTarget.x = this.prevPos.x
+			this.dragTarget.y = this.prevPos.y
+			this.dragTarget = null
+			this.renderer.app.stage.off('pointermove', this.dragMove)
+		}
 	}
 	getTexture(candy: SPRITE) {
 		return candy.texture

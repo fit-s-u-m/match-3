@@ -16,6 +16,8 @@ export class Grid {
 	checkValidity(direction: DIRECTION, matches: MATCH[], r: number, c: number) {
 		const candyId = this.gridInfo[r][c].candyId
 		const start = direction == "vertical" ? r == 0 : c == 0
+		const lastIndex = matches.length >= 0 ? matches.length - 1 : 0
+		const isMatch: boolean = lastIndex >= 0 ? matches[lastIndex].candyId == candyId : false
 		if (start) {
 			matches.push({
 				startIndex: { r, c },
@@ -25,8 +27,6 @@ export class Grid {
 			})
 		}
 		else {
-			const lastIndex = matches.length >= 0 ? matches.length - 1 : 0
-			const isMatch: boolean = lastIndex >= 0 ? matches[lastIndex].candyId == candyId : false
 			if (isMatch)
 				matches[lastIndex].count += 1
 			else {
@@ -38,7 +38,64 @@ export class Grid {
 				})
 			}
 		}
-
+		return isMatch
+	}
+	checkMove(targetPos: { r: number, c: number }, prevPos: { r: number, c: number }, candyId: number) {
+		const { r: tr, c: tc } = targetPos
+		const { r: pr, c: pc } = prevPos
+		let matchHorizontal: MATCH[] = [{
+			startIndex: { r: tr, c: tc },
+			count: 1,
+			direction: "horizontal",
+			candyId
+		}]
+		let matchVertical: MATCH[] = [{
+			startIndex: { r: tr, c: tc },
+			count: 1,
+			direction: "vertical",
+			candyId
+		}]
+		let countH = 1
+		let countV = 1
+		// check right
+		for (let i = tc + 1; i < this.gridInfo[tr].length; i++) {
+			if (i < 0) break
+			if (i == pc && tr == pr) break
+			if (!this.checkValidity("horizontal", matchHorizontal, tr, i)) break
+			countH++
+		}
+		matchHorizontal = [{ // reset the match
+			startIndex: { r: tr, c: tc },
+			count: 1,
+			direction: "horizontal",
+			candyId
+		}]
+		// check left
+		for (let i = tc - 1; i >= 0; i--) {
+			if (i == pc && tr == pr) break
+			if (!this.checkValidity("horizontal", matchHorizontal, tr, i)) break
+			countH++
+		}
+		// check bottom
+		for (let i = tr + 1; i < this.gridInfo[tr].length; i++) {
+			if (i == pr && tc == pc) break
+			if (!this.checkValidity("vertical", matchVertical, i, tc)) break
+			countV++
+		}
+		matchVertical = [{ // reset the match
+			startIndex: { r: tr, c: tc },
+			count: 1,
+			direction: "vertical",
+			candyId
+		}]
+		// check top
+		for (let i = tr - 1; i >= 0; i--) {
+			if (i < 0) break
+			if (i == pr && tc == pc) break
+			if (!this.checkValidity("vertical", matchVertical, i, tc)) break
+			countV++
+		}
+		return countH > 2 || countV > 2
 	}
 	checkGrid() {  // checking the whole grid   
 		let matches: MATCH[] = []
@@ -77,7 +134,6 @@ export class Grid {
 				const candy = this.gridInfo[row][col].candy;
 				if (candy) {
 					candy.destroy()
-					// Optionally destroy the candy object
 					this.gridInfo[row][col].candyId = -1;
 					this.gridInfo[row][col].candy = undefined;
 					colToClear.add(col);
@@ -92,12 +148,10 @@ export class Grid {
 				if (this.gridInfo[r][c].candyId == -1) { // Empty slot
 					emptyCount++;
 				} else if (emptyCount > 0) {
-					console.log(emptyCount)
 					// Move the candy down by the number of empty slots below
 					const candyMoving = this.gridInfo[r][c]
 					const candyMovingTo = this.gridInfo[r + emptyCount][c]
 					if (candyMoving.candy && candyMovingTo.y) {
-						// candyMoving.candy.position.y = candyMovingTo.y
 						await candies.fallDown(candyMoving.candy, candyMovingTo.y, 6)
 					}
 					// Set the new slot
