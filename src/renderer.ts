@@ -1,5 +1,6 @@
-import * as PIXI from "pixi.js";
-import { ELEMENT, TEXTURE } from "../types.ts";
+import * as PIXI from "pixi.js"
+
+import { ELEMENT } from "../types.ts"
 
 export class Renderer {
 	app: PIXI.Application;
@@ -52,10 +53,19 @@ export class Renderer {
 	createSprite(texture: any) {
 		return new PIXI.Sprite(texture);
 	}
-	animationLoop(callback: Function) {
-		this.app.ticker.add(() => {
-			callback();
-		});
+	async animationLoop(callback: Function) {
+		this.app.ticker.autoStart = false
+		let elapsedData = 0;
+		this.app.ticker.add(delta => {
+			elapsedData += delta.deltaMS
+			if (elapsedData > 700) {
+				callback()
+				elapsedData = 0
+			}
+		})
+	}
+	sleep(ms: number) {
+		return new Promise(resolve => setTimeout(resolve, ms))
 	}
 	removeLoop(callback: Function) {
 		this.app.ticker.remove(() => {
