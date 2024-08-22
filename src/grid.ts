@@ -140,41 +140,44 @@ export class Grid {
 				}
 			}
 		}
+		const columns = Array.from(colToClear);
+		const columnPromises = columns.map((column: number) => this.spawnAndFill(column, candies));
+		await Promise.all(columnPromises);
+	}
+	async spawnAndFill(column: number, candies: Candies) {
 
-		for (let c of colToClear) {
-			let emptyCount = 0;
-			// Shift candies down in columns that had matches
-			for (let r = this.gridInfo.length - 1; r >= 0; r--) {
-				if (this.gridInfo[r][c].candyId == -1) { // Empty slot
-					emptyCount++;
-				} else if (emptyCount > 0) {
-					// Move the candy down by the number of empty slots below
-					const candyMoving = this.gridInfo[r][c]
-					const candyMovingTo = this.gridInfo[r + emptyCount][c]
-					if (candyMoving.candy && candyMovingTo.y) {
-						await candies.fallDown(candyMoving.candy, candyMovingTo.y, 6)
-					}
-					// Set the new slot
-					this.gridInfo[r + emptyCount][c].candyId = candyMoving.candyId;
-					this.gridInfo[r + emptyCount][c].candy = candyMoving.candy;
-					// Clear the old slot
-					this.gridInfo[r][c].candyId = -1;
-					this.gridInfo[r][c].candy = undefined;
+		let emptyCount = 0;
+		// Shift candies down in columns that had matches
+		for (let r = this.gridInfo.length - 1; r >= 0; r--) {
+			if (this.gridInfo[r][column].candyId == -1) { // Empty slot
+				emptyCount++;
+			} else if (emptyCount > 0) {
+				// Move the candy down by the number of empty slots below
+				const candyMoving = this.gridInfo[r][column]
+				const candyMovingTo = this.gridInfo[r + emptyCount][column]
+				if (candyMoving.candy && candyMovingTo.y) {
+					await candies.fallDown(candyMoving.candy, candyMovingTo.y, 6)
 				}
+				// Set the new slot
+				this.gridInfo[r + emptyCount][column].candyId = candyMoving.candyId;
+				this.gridInfo[r + emptyCount][column].candy = candyMoving.candy;
+				// Clear the old slot
+				this.gridInfo[r][column].candyId = -1;
+				this.gridInfo[r][column].candy = undefined;
 			}
-			// spawn new candies
-			for (let r = 0; r < this.gridInfo.length; r++) {
-				if (this.gridInfo[r][c].candyId == -1) { // is empty
-					const candyId = Math.floor(Math.random() * 6)
-					const candy = candies.createCandy(candyId)
-					candies.spawn(this.gridInfo[r][c].x, this.gridInfo[r][c].y, this.gridInfo[r][c].cellSize, candy)
-					this.gridInfo[r][c].candyId = candyId
-					this.gridInfo[r][c].candy = candy
-					this.renderer.stage(candy)
-				}
-				else
-					break
+		}
+		// spawn new candies
+		for (let r = 0; r < this.gridInfo.length; r++) {
+			if (this.gridInfo[r][column].candyId == -1) { // is empty
+				const candyId = Math.floor(Math.random() * 6)
+				const candy = candies.createCandy(candyId)
+				candies.spawn(this.gridInfo[r][column].x, this.gridInfo[r][column].y, this.gridInfo[r][column].cellSize, candy)
+				this.gridInfo[r][column].candyId = candyId
+				this.gridInfo[r][column].candy = candy
+				this.renderer.stage(candy)
 			}
+			else
+				break
 		}
 	}
 	getGridPosition(position: { x: number, y: number }) {
