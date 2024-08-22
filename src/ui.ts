@@ -52,7 +52,6 @@ export class UI {
 		// this.levelText = text
 		// text.zIndex = 1
 
-	createLevelBoard(gridPos: { x: number; y: number }) {
 		const boardbg = this.renderer.createSprite(this.boardTexture);
 		const margin = 50;
 		boardbg.position.set(margin, gridPos.y + margin);
@@ -64,13 +63,6 @@ export class UI {
 			boardbg.position.y + boardbg.height / 2
 		);
 		this.scoreText = text;
-		text.zIndex = 1;
-		const text = this.renderer.write(
-			`Level : ${this.level}`,
-			boardbg.position.x + boardbg.width / 2 - 40,
-			boardbg.position.y + boardbg.height / 2
-		);
-		this.levelText = text;
 		text.zIndex = 1;
 
 		//  // Score display background
@@ -87,26 +79,6 @@ export class UI {
 
 		this.renderer.stage(boardbg, text);
 		// this.renderer.stage(boardbg, text, scoreBoardbg, scoreText);
-		// Score display background
-		const scoreBoardbg = this.renderer.createSprite(this.boardTexture);
-		scoreBoardbg.position.set(
-			margin,
-			boardbg.position.y + boardbg.height + margin
-		);
-		scoreBoardbg.width = boardbg.width;
-		scoreBoardbg.height = 100;
-		this.scoreBoard = scoreBoardbg;
-
-		// Score display text
-		const scoreText = this.renderer.write(
-			`Score : ${this.score}`,
-			scoreBoardbg.position.x + scoreBoardbg.width / 2 - 40,
-			scoreBoardbg.position.y + scoreBoardbg.height / 2
-		);
-		this.scoreText = scoreText;
-		scoreText.zIndex = 1;
-
-		this.renderer.stage(boardbg, text, scoreBoardbg, scoreText);
 	}
 
 	createGameOverScreen() {
@@ -130,7 +102,7 @@ export class UI {
 			100, // Height
 			{
 				x: this.renderer.app.screen.width / 2,
-				y: this.renderer.app.screen.height / 2 + 120,
+				y: this.renderer.app.screen.height / 2 + 150,
 			},
 			verticalOffset
 		);
