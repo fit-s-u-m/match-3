@@ -180,7 +180,7 @@ export class UI {
 		console.log("Play button clicked");
 		this.removePlayScreen(); // Remove the play screen
 		console.log("Removing play screen");
-		this.game.startGameLogic();
+		this.game.startGameLoop();
 		this.soundManager.playSound("backgroundMusic");
 		this.soundManager.setVolume("backgroundMusic", 0.1);
 	}
