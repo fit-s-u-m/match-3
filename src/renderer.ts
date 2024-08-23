@@ -8,6 +8,9 @@ export class Renderer {
 	gameOverBackgroundTexture: PIXI.Texture | null = null;
 	restartTexture: PIXI.Texture | null = null;
 	restartIcon: PIXI.Sprite | null = null;
+	playBackgroundTexture: PIXI.Texture | null = null;
+	playTexture: PIXI.Texture | null = null;
+	playIcon: PIXI.Sprite | null = null;
 	constructor() {
 		this.app = new PIXI.Application();
 	}
@@ -44,6 +47,17 @@ export class Renderer {
 	stage(...element: ELEMENT[]) {
 		element.forEach((element) => this.app.stage.addChild(element));
 	}
+	remove(...sprites: any[]) {
+		sprites.forEach((sprite) => {
+			if (sprite.parent) {
+				console.log(`Removing sprite with parent:`, sprite); // Debugging line
+				sprite.parent.removeChild(sprite);
+			} else {
+				console.log(`Sprite has no parent and cannot be removed:`, sprite); // Debugging line
+			}
+		});
+	}
+
 	getMid() {
 		return { x: this.app.screen.width / 2, y: this.app.screen.height / 2 };
 	}
@@ -136,5 +150,54 @@ export class Renderer {
 		restartIcon.interactive = true;
 		(restartIcon as any).buttonMode = true;
 		return restartIcon;
+	}
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+
+	createplayText(text: string, x: number, y: number) {
+		const style = new PIXI.TextStyle({
+			fill: "white",
+			fontSize: 80,
+			fontFamily: "Arial",
+			fontWeight: "bold",
+			align: "center",
+		});
+
+		const playText = new PIXI.Text({ text, style });
+		playText.anchor.set(0.5);
+		playText.position.set(x, y);
+		playText.zIndex = 11;
+		return playText;
+	}
+
+	createplayBackground(texture: PIXI.Texture, width: number, height: number) {
+		const playBackground = new PIXI.Sprite(texture);
+		playBackground.anchor.set(0.5);
+		playBackground.position.set(
+			this.app.screen.width / 2,
+			this.app.screen.height / 2
+		);
+		playBackground.width = width;
+		playBackground.height = height;
+		playBackground.zIndex = 10;
+		return playBackground;
+	}
+
+	createplayButton(
+		texture: PIXI.Texture,
+		width: number,
+		height: number,
+		position: { x: number; y: number },
+		verticalOffset: number = 0
+	) {
+		const playIcon = new PIXI.Sprite(texture);
+		playIcon.anchor.set(0.5);
+		playIcon.position.set(position.x, position.y - verticalOffset);
+		playIcon.width = width;
+		playIcon.height = height;
+		playIcon.zIndex = 12;
+		playIcon.interactive = true;
+		(playIcon as any).buttonMode = true;
+		return playIcon;
 	}
 }

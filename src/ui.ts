@@ -1,9 +1,16 @@
 import { RENDERER, TEXT, TEXTURE } from "../types";
+
+import { Game } from "./game";
+
+import { Sound } from "./sound";
+
 export class UI {
 	renderer: RENDERER;
 	boardTexture: TEXTURE;
 	gameOverBackgroundTexture: TEXTURE;
+	playBackgroundTexture: TEXTURE;
 	restartTexture: TEXTURE;
+	playTexture: TEXTURE;
 	move: number = 0;
 	level: number = 1;
 	score: number = 0;
@@ -12,8 +19,15 @@ export class UI {
 
 	scoreText: TEXT;
 	scoreBoard: any;
-	constructor(renderer: RENDERER) {
+	soundManager = new Sound();
+
+	playBackground: any | null = null; // Allow null
+	playText: TEXT | null = null; // Allow null
+	playIcon: any | null = null; // Allow null
+	game: Game;
+	constructor(renderer: RENDERER, game: Game) {
 		this.renderer = renderer;
+		this.game = game;
 	}
 	async init() {
 		this.boardTexture = await this.renderer.loadAsset(
@@ -24,6 +38,13 @@ export class UI {
 		);
 		this.restartTexture = await this.renderer.loadAsset(
 			"public/assets/restart-2.png"
+		);
+
+		this.playBackgroundTexture = await this.renderer.loadAsset(
+			"public/assets/level1.png"
+		);
+		this.playTexture = await this.renderer.loadAsset(
+			"public/assets/play.png"
 		);
 	}
 	createCounterBoard(gridPos: { x: number; y: number }, gridWidth: number) {
@@ -111,10 +132,78 @@ export class UI {
 
 		this.renderer.stage(gameOverBackground, gameOverText, restartIcon);
 	}
-
 	onRestartClick() {
+		this.soundManager.playSound("buttonClick");
+		this.soundManager.setVolume("buttonClick", 0.1);
 		location.reload(); // for now it just refreshes the page
+		// this.game.startGameLogic();
+		// this.removePlayScreen();
 	}
+
+	// -----------------------------------------------------------------------------------------------------------
+
+	createplayScreen() {
+		const playBackground = this.renderer.createplayBackground(
+			this.playBackgroundTexture,
+			600, // Width
+			100 // Height
+		);
+
+		const playText = this.renderer.createplayText(
+			"Play",
+			this.renderer.app.screen.width / 2,
+			this.renderer.app.screen.height / 2
+		);
+
+		const playIcon = this.renderer.createplayButton(
+			this.playTexture,
+			100, // Width
+			100, // Height
+			{
+				x: this.renderer.app.screen.width / 2,
+				y: this.renderer.app.screen.height / 2 + 150,
+			}
+		);
+
+		playIcon.on("pointerdown", this.onplayClick.bind(this));
+
+		this.renderer.stage(playBackground, playText, playIcon);
+
+		this.playBackground = playBackground;
+		this.playText = playText;
+		this.playIcon = playIcon;
+	}
+
+	onplayClick() {
+		this.soundManager.playSound("buttonClick");
+		this.soundManager.setVolume("buttonClick", 0.1);
+		console.log("Play button clicked");
+		this.removePlayScreen(); // Remove the play screen
+		console.log("Removing play screen");
+		this.game.startGameLogic();
+		this.soundManager.playSound("backgroundMusic");
+		this.soundManager.setVolume("backgroundMusic", 0.1);
+	}
+	removePlayScreen() {
+		console.log("Removing play screen...");
+		if (this.playBackground) {
+			console.log("Removing playBackground");
+			this.renderer.remove(this.playBackground);
+			this.playBackground = null;
+		}
+		if (this.playText) {
+			console.log("Removing playText");
+			this.renderer.remove(this.playText);
+			this.playText = null;
+		}
+		if (this.playIcon) {
+			console.log("Removing playIcon");
+			this.playIcon.off("pointerdown", this.onplayClick.bind(this)); // Remove event listener
+			this.renderer.remove(this.playIcon);
+			this.playIcon = null;
+		}
+	}
+	
 
 	updateMove(move: number) {
 		this.move = move;
