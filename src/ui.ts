@@ -1,4 +1,4 @@
-import { RENDERER, TEXT, TEXTURE } from "../types";
+import { MATCH, RENDERER, TEXT, TEXTURE } from "../types";
 
 import { Game } from "./game";
 
@@ -12,10 +12,8 @@ export class UI {
 	restartTexture: TEXTURE;
 	playTexture: TEXTURE;
 	move: number = 0;
-	level: number = 1;
 	score: number = 0;
 	moveText: TEXT;
-	levelText: TEXT;
 
 	scoreText: TEXT;
 	scoreBoard: any;
@@ -114,9 +112,6 @@ export class UI {
 		this.soundManager.setVolume("buttonClick", 0.1);
 		location.reload(); // for now it just refreshes the page
 	}
-
-	// -----------------------------------------------------------------------------------------------------------
-
 	createplayScreen() {
 		const playBackground = this.renderer.createplayBackground(
 			this.playBackgroundTexture,
@@ -179,13 +174,11 @@ export class UI {
 		this.move = move;
 		this.moveText.text = `Move : ${move}`;
 	}
-	updateLevel(level: number) {
-		this.level = level;
-		this.levelText.text = `Level : ${level}`;
-	}
-	updateScore(score: number) {
-		this.score = score;
-		this.scoreText.text = `Score :x ${score}`;
+	updateScore(matches: MATCH[]) {
+		const scoreCount = matches.map(match => (match.count - 2) * 60);
+		const score = scoreCount.reduce((acc, curr) => acc + curr, 0);
+		this.score += score;
+		this.scoreText.text = `Score :${this.score}`;
 	}
 	getMoveCount() {
 		return this.move;
