@@ -50,10 +50,7 @@ export class Renderer {
 	remove(...sprites: any[]) {
 		sprites.forEach((sprite) => {
 			if (sprite.parent) {
-				console.log(`Removing sprite with parent:`, sprite); // Debugging line
 				sprite.parent.removeChild(sprite);
-			} else {
-				console.log(`Sprite has no parent and cannot be removed:`, sprite); // Debugging line
 			}
 		});
 	}

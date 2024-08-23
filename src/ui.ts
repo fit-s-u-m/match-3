@@ -177,33 +177,28 @@ export class UI {
 	onplayClick() {
 		this.soundManager.playSound("buttonClick");
 		this.soundManager.setVolume("buttonClick", 0.1);
-		console.log("Play button clicked");
+
 		this.removePlayScreen(); // Remove the play screen
-		console.log("Removing play screen");
+
 		this.game.startGameLoop();
 		this.soundManager.playSound("backgroundMusic");
 		this.soundManager.setVolume("backgroundMusic", 0.1);
 	}
 	removePlayScreen() {
-		console.log("Removing play screen...");
 		if (this.playBackground) {
-			console.log("Removing playBackground");
 			this.renderer.remove(this.playBackground);
 			this.playBackground = null;
 		}
 		if (this.playText) {
-			console.log("Removing playText");
 			this.renderer.remove(this.playText);
 			this.playText = null;
 		}
 		if (this.playIcon) {
-			console.log("Removing playIcon");
 			this.playIcon.off("pointerdown", this.onplayClick.bind(this)); // Remove event listener
 			this.renderer.remove(this.playIcon);
 			this.playIcon = null;
 		}
 	}
-	
 
 	updateMove(move: number) {
 		this.move = move;
