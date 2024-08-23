@@ -115,13 +115,13 @@ export class Candies {
 		if (!this.grid.checkMove(targetGridPos, prevGridPos, dragId)) {
 			this.revertDrag();
 			this.soundManager.playSound("wrongMusic");
-			this.soundManager.setVolume("wrongMusic", 0.5);
+			this.soundManager.setVolume("wrongMusic", 0.3);
 			return;
 		}
 
 		this.swap(this.dragTarget, targetCandyInfo.candy);
 		this.soundManager.playSound("swapMusic");
-		this.soundManager.setVolume("swapMusic", 0.5);
+		this.soundManager.setVolume("swapMusic", 0.3);
 
 		// swaping the ids
 		const temp = this.grid.gridInfo[targetGridPos.r][targetGridPos.c].candyId;

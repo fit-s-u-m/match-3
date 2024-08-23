@@ -151,6 +151,8 @@ export class Grid {
 			});
 		});
 		await Promise.all(matchPromises);
+		this.soundManager.playSound("matchMusic");
+		this.soundManager.setVolume("matchMusic", 0.3);
 
 		const columns = Array.from(colToClear);
 		const columnPromises = columns.map((column: number) =>
@@ -158,9 +160,7 @@ export class Grid {
 		);
 		await Promise.all(columnPromises);
 	}
-	clearMatched(item: MATCH, colToClear: Set<number> = new Set()) {
-		this.soundManager.playSound("matchMusic");
-		this.soundManager.setVolume("matchMusic", 0.5); // has side effect
+	clearMatched(item: MATCH, colToClear: Set<number> = new Set()) { // has side effect
 		for (let count = 0; count < item.count; count++) {
 			const row =
 				item.direction == "vertical"
