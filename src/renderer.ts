@@ -32,7 +32,7 @@ export class Renderer {
 
 		// setting the background
 		const bgPath = "../public/assets/bg5-2.jpg";
-		const backgroundTexture = await PIXI.Assets.load(bgPath); //i am going to find a better color for bg texture
+		const backgroundTexture = await PIXI.Assets.load(bgPath); 
 		const backgroundSprite = new PIXI.Sprite(backgroundTexture);
 		backgroundSprite.zIndex = -10;
 		backgroundSprite.width = this.app.screen.width;
@@ -148,8 +148,6 @@ export class Renderer {
 		(restartIcon as any).buttonMode = true;
 		return restartIcon;
 	}
-
-	// ---------------------------------------------------------------------------------------------------------------------------
 
 	createplayText(text: string, x: number, y: number) {
 		const style = new PIXI.TextStyle({

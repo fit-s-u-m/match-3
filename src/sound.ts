@@ -8,7 +8,6 @@ export class Sound {
 		this.loadSounds();
 		this.handleUserInteraction = this.handleUserInteraction.bind(this);
 
-		// Add an event listener for user interaction
 		document.addEventListener("click", this.handleUserInteraction, {
 			once: true,
 		});
@@ -19,15 +18,12 @@ export class Sound {
 
 	private handleUserInteraction() {
 		if (!this.audioContextResumed) {
-			// Ensure that the Pixi.js sound context is resumed
 			this.audioContextResumed = true;
 
-			// Load sounds after resuming
 			this.loadSounds();
 		}
 	}
 	private async loadSounds() {
-		// Define all sounds you want to load
 		const sounds = [
 			{ key: "backgroundMusic", path: "public/assets/sounds/music3.mp3" },
 			{ key: "game-overMusic", path: "public/assets/sounds/game-over.wav" },
@@ -36,7 +32,6 @@ export class Sound {
 			{ key: "scoreMusic", path: "public/assets/sounds/next-level.wav" },
 			{ key: "buttonClick", path: "public/assets/sounds/select.wav" },
 			{ key: "matchMusic", path: "public/assets/sounds/match.wav" },
-			// more sounds here
 		];
 		// Load all sounds
 		for (const soundInfo of sounds) {
@@ -66,5 +61,4 @@ export class Sound {
 			console.warn(`Sound with key '${key}' not found.`);
 		}
 	}
-	// we add another features if needed here
 }

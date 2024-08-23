@@ -49,7 +49,7 @@ export class Candies {
 	}
 
 	dragMove(event: any) {
-		if (this.gameOver || !this.dragTarget) return; // Prevent movement if game is over
+		if (this.gameOver || !this.dragTarget) return;
 		this.dragTarget.x = event.data.global.x - this.dragTarget.width / 2;
 		this.dragTarget.y = event.data.global.y - this.dragTarget.height / 2;
 	}
@@ -77,7 +77,6 @@ export class Candies {
 			if (targetCandyInfo) break; // Exit outer loop if targetCandyInfo is found
 		}
 		if (!targetCandyInfo) {
-			// console.log('No valid target found, reverting...');
 			this.revertDrag();
 			return;
 		}
@@ -110,7 +109,6 @@ export class Candies {
 			if (adjacent) break;
 		}
 		if (!adjacent || !targetCandyInfo.candy) {
-			// console.log('Not adjacent, reverting...');
 			this.revertDrag();
 			return;
 		}
@@ -118,11 +116,10 @@ export class Candies {
 			this.revertDrag();
 			this.soundManager.playSound("wrongMusic");
 			this.soundManager.setVolume("wrongMusic", 0.5);
-			// console.log("not a match move")
 			return;
 		}
 
-		this.swap(this.dragTarget, targetCandyInfo.candy); // swaps the candies
+		this.swap(this.dragTarget, targetCandyInfo.candy);
 		this.soundManager.playSound("swapMusic");
 		this.soundManager.setVolume("swapMusic", 0.5);
 
@@ -185,8 +182,6 @@ export class Candies {
 				candy.y += speed;
 				await this.sleep(time);
 			}
-		} else {
-			console.log("candy not found");
 		}
 	}
 	sleep(ms: number) {

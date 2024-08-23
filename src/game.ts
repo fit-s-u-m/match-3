@@ -34,7 +34,7 @@ export class Game {
 	async startGameLoop() {
 		this.gridInfo = await this.grid.makeGrid(8, 8);
 		this.ui.createCounterBoard(this.grid.gridPos, this.grid.width);
-		this.ui.createLevelBoard(this.grid.gridPos);
+		this.ui.createScoreBoard(this.grid.gridPos);
 		this.gridInfo.forEach((row) => {
 			row.forEach((info) => {
 				const candy = this.candies.createCandy(info.candyId);
@@ -65,8 +65,4 @@ export class Game {
 		this.candies.setGameOver();
 	}
 
-	// handleplay() {
-	// 	this.ui.createplayScreen();
-	// 	// this.candies.setGameOver();
-	// }
 }
