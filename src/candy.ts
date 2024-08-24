@@ -162,15 +162,13 @@ export class Candies {
 	}
 	async fallDown(candy: SPRITE, y: number, time = 6) {
 		const speed = 8
-		if (candy.position.y < y) {
-			while (candy.y <= y) {
-				candy.y += speed
-				await this.sleep(time)
+		const id = setInterval(() => {
+			candy.y += speed
+			if (candy.y >= y) {
+				clearInterval(id)
+				candy.y = y
 			}
-		}
-		else {
-			console.log("candy not found")
-		}
+		}, time)
 	}
 	sleep(ms: number) {
 		return new Promise((resolve) => setTimeout(resolve, ms));
