@@ -177,13 +177,14 @@ export class Candies {
 	}
 	async fallDown(candy: SPRITE, y: number, time = 6) {
 		const speed = 8
-		const id = setInterval(() => {
-			candy.y += speed
-			if (candy.y >= y) {
-				clearInterval(id)
-				candy.y = y
-			}
-		}, time)
+		if (candy) {
+			const id = setInterval(() => {
+				candy.y += speed
+				if (candy.y >= y) {
+					clearInterval(id)
+				}
+			}, time)
+		}
 	}
 	sleep(ms: number) {
 		return new Promise((resolve) => setTimeout(resolve, ms));
