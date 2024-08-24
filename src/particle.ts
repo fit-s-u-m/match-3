@@ -1,8 +1,8 @@
-import { TEXTURE, RENDERER, ELEMENT, VECTOR } from "../types.ts"
+import { TEXTURE, RENDERER, SPRITE, VECTOR } from "../types.ts"
 export class Particle {
 	particleTexture: TEXTURE
 	renderer: RENDERER
-	particle: ELEMENT
+	particle: SPRITE
 	velocity: VECTOR;
 	life: number;
 	fadeSpeed: number;
@@ -38,8 +38,11 @@ export class Particle {
 		this.particle.position.set(this.position.x, this.position.y);
 	}
 	async init() {
-		this.particleTexture = await this.renderer.loadAsset("assets/restart.png")
+		this.particleTexture = await this.renderer.loadAsset("assets/particle.png")
 		this.particle = this.renderer.createSprite(this.particleTexture)
+		this.particle.anchor.set(0.5)
+		this.particle.setSize(100, 100)
+
 		this.particle.position.set(this.position.x, this.position.y)
 		this.particle.zIndex = 1000
 		this.particle.visible = false

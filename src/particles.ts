@@ -10,6 +10,7 @@ export class Particles {
 	}
 	update() {
 		this.particles.forEach(particle => {
+			if (particle.destoyed) return;
 			particle.update();
 		});
 	}

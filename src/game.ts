@@ -68,7 +68,7 @@ export class Game {
 						: start.r * cellSize + cellSize / 2 + gridPos.y
 
 					const point = this.renderer.createVector(positionX, positionY);
-					const particle = new Particles(this.renderer, point, 10)
+					const particle = new Particles(this.renderer, point, 50)
 					await particle.draw()
 					this.particles.push(particle);
 				})
