@@ -4,6 +4,7 @@ import { Candies } from "./candy";
 import { UI } from "./ui";
 import { GRIDINFO } from "../types";
 import { Sound } from "./sound";
+import { Particles } from "./particles";
 export class Game {
 	renderer: Renderer;
 	grid: Grid;
@@ -14,6 +15,7 @@ export class Game {
 	moveCounter: number = 0;
 	gameOver: boolean = false;
 	soundManager = new Sound();
+	particles: Particles[] = [];
 	constructor() {
 		this.renderer = new Renderer();
 		this.grid = new Grid(this.renderer);
@@ -47,8 +49,30 @@ export class Game {
 		this.candies.setGrid(this.grid, this.ui);
 
 		this.renderer.animationLoop(() => {
+			this.particles = []
 			if (!this.gameOver) {
 				const matches = this.grid.checkGrid();
+
+				matches.forEach(async (match) => { // for every match
+					const cellSize = this.grid.gridInfo[0][0].cellSize;
+					const gridPos = this.grid.gridPos;
+					const middle = match.count / 2
+					const start = match.startIndex
+
+					// calculate x and y position of the match
+					const positionX = match.direction === "horizontal"
+						? ((start.c + middle) * cellSize + cellSize / 2) + gridPos.x
+						: start.c * cellSize + cellSize / 2 + gridPos.x
+					const positionY = match.direction === "vertical"
+						? (start.r + middle) * cellSize + cellSize / 2 + gridPos.y
+						: start.r * cellSize + cellSize / 2 + gridPos.y
+
+					const point = this.renderer.createVector(positionX, positionY);
+					const particle = new Particles(this.renderer, point, 10)
+					await particle.draw()
+					this.particles.push(particle);
+				})
+
 				if (matches.length > 0) {
 					this.ui.updateScore(matches);
 				}
@@ -60,6 +84,9 @@ export class Game {
 				}
 			}
 		});
+		this.renderer.particleAnimation(() => {
+			this.particles.forEach(particle => particle.update())
+		})
 	}
 
 	handleGameOver() {

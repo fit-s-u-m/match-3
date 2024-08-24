@@ -25,3 +25,5 @@ export type MATCH = {
 	direction: DIRECTION;
 	candyId: number;
 };
+export type VECTOR = PIXI.Point
+export type CONTAINER = PIXI.Container

@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 
-import { ELEMENT } from "../types.ts";
+import { ELEMENT, VECTOR } from "../types.ts";
 
 export class Renderer {
 	app: PIXI.Application;
@@ -11,6 +11,7 @@ export class Renderer {
 	playBackgroundTexture: PIXI.Texture | null = null;
 	playTexture: PIXI.Texture | null = null;
 	playIcon: PIXI.Sprite | null = null;
+	particleTicker: PIXI.Ticker | null = null;
 	constructor() {
 		this.app = new PIXI.Application();
 	}
@@ -32,7 +33,7 @@ export class Renderer {
 
 		// setting the background
 		const bgPath = "../public/assets/bg5-2.jpg";
-		const backgroundTexture = await PIXI.Assets.load(bgPath); 
+		const backgroundTexture = await PIXI.Assets.load(bgPath);
 		const backgroundSprite = new PIXI.Sprite(backgroundTexture);
 		backgroundSprite.zIndex = -10;
 		backgroundSprite.width = this.app.screen.width;
@@ -61,19 +62,36 @@ export class Renderer {
 	async loadAsset(path: string) {
 		return await PIXI.Assets.load(path);
 	}
+	createRect(width: number, height: number, color: string) {
+		return new PIXI.Graphics().rect(0, 0, width, height).fill(color);
+	}
 	createSprite(texture: any) {
 		return new PIXI.Sprite(texture);
 	}
-	async animationLoop(callback: Function) {
+	async animationLoop(callback: Function, context: any = null, speed: number = 700) {
 		this.app.ticker.autoStart = false;
 		let elapsedData = 0;
 		this.app.ticker.add((delta) => {
 			elapsedData += delta.deltaMS;
-			if (elapsedData > 700) {
+			if (elapsedData > speed) {
 				callback();
 				elapsedData = 0;
 			}
-		});
+		}, context);
+	}
+	particleAnimation(callback: Function, context: any = null) {
+		const ticker = new PIXI.Ticker();
+		this.particleTicker = ticker;
+		ticker.add(() => {
+			callback();
+		}, context);
+		ticker.start();
+	}
+	stopParticleAnimation() {
+		this.particleTicker?.stop();
+	}
+	createContainer() {
+		return new PIXI.Container();
 	}
 	sleep(ms: number) {
 		return new Promise((resolve) => setTimeout(resolve, ms));
@@ -176,6 +194,9 @@ export class Renderer {
 		playBackground.height = height;
 		playBackground.zIndex = 10;
 		return playBackground;
+	}
+	createVector(x: number, y: number): VECTOR {
+		return new PIXI.Point(x, y);
 	}
 
 	createplayButton(
