@@ -176,14 +176,14 @@ export class Candies {
 		candy1.y = this.prevPos.y;
 	}
 	async fallDown(candy: SPRITE, y: number, time = 6) {
-		const speed = 8
+		const speed = 8;
 		if (candy) {
 			const id = setInterval(() => {
-				candy.y += speed
+				candy.y += speed;
 				if (candy.y >= y) {
-					clearInterval(id)
+					clearInterval(id);
 				}
-			}, time)
+			}, time);
 		}
 	}
 	sleep(ms: number) {

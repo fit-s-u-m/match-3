@@ -32,7 +32,7 @@ export class Renderer {
 
 		// setting the background
 		const bgPath = "public/ui/bg_night.jpg";
-		const backgroundTexture = await PIXI.Assets.load(bgPath); 
+		const backgroundTexture = await PIXI.Assets.load(bgPath);
 		const backgroundSprite = new PIXI.Sprite(backgroundTexture);
 		backgroundSprite.zIndex = -10;
 		backgroundSprite.width = this.app.screen.width;
@@ -42,7 +42,6 @@ export class Renderer {
 		this.gameOverBackgroundTexture = await PIXI.Assets.load(
 			"public/assets/level1.png"
 		);
-		this.restartTexture = await PIXI.Assets.load("public/assets/restart.png");
 	}
 	stage(...element: ELEMENT[]) {
 		element.forEach((element) => this.app.stage.addChild(element));
@@ -86,7 +85,7 @@ export class Renderer {
 	write(text: string, x: number, y: number) {
 		const style = new PIXI.TextStyle({
 			fill: "white",
-			fontSize: 80,
+			fontSize: 40,
 			fontFamily: "Bubblegum Sans",
 			align: "center",
 			fontWeight: "bold",
@@ -101,7 +100,7 @@ export class Renderer {
 		const style = new PIXI.TextStyle({
 			fill: "white",
 			fontSize: 80,
-			fontFamily: "Arial",
+			fontFamily: "Bubblegum Sans",
 			fontWeight: "bold",
 			align: "center",
 		});
@@ -152,7 +151,7 @@ export class Renderer {
 	createplayText(text: string, x: number, y: number) {
 		const style = new PIXI.TextStyle({
 			fill: "white",
-			fontSize: 200,
+			fontSize: 100,
 			fontFamily: "Bubblegum Sans",
 			fontWeight: "bold",
 			align: "center",

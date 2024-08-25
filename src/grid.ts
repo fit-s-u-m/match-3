@@ -160,7 +160,8 @@ export class Grid {
 		);
 		await Promise.all(columnPromises);
 	}
-	clearMatched(item: MATCH, colToClear: Set<number> = new Set()) { // has side effect
+	clearMatched(item: MATCH, colToClear: Set<number> = new Set()) {
+		// has side effect
 		for (let count = 0; count < item.count; count++) {
 			const row =
 				item.direction == "vertical"
@@ -238,19 +239,19 @@ export class Grid {
 		}[][] = Array.from({ length: row }, () => Array(col).fill(0));
 		const margin = 10; // to create spacing
 		const cellSize =
-		col > row
-		? (this.renderer.app.screen.width - margin * col) / col
-		: (this.renderer.app.screen.height - margin * row) / row;
+			col > row
+				? (this.renderer.app.screen.width - margin * col) / col
+				: (this.renderer.app.screen.height - margin * row) / row;
 		const offset = {
 			x:
-			(this.renderer.app.screen.width -
-				(row * cellSize + (row - 1) * margin)) /
+				(this.renderer.app.screen.width -
+					(row * cellSize + (row - 1) * margin)) /
 				2,
-				y:
+			y:
 				(this.renderer.app.screen.height -
 					(col * cellSize + (col - 1) * margin)) /
-					2,
-				};
+				2,
+		};
 		this.width = col * cellSize + (col - 1) * margin;
 		this.height = row * cellSize + (row - 1) * margin;
 		this.gridPos = { x: offset.x, y: offset.y };
