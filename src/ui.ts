@@ -29,7 +29,7 @@ export class UI {
 	}
 	async init() {
 		this.boardTexture = await this.renderer.loadAsset(
-			"../public/assets/level1.png"
+			"public/ui/time_scores.png"
 		);
 		this.gameOverBackgroundTexture = await this.renderer.loadAsset(
 			"public/assets/level1.png"
@@ -39,7 +39,7 @@ export class UI {
 		);
 
 		this.playBackgroundTexture = await this.renderer.loadAsset(
-			"public/assets/level1.png"
+			"public/ui/button.png"
 		);
 		this.playTexture = await this.renderer.loadAsset(
 			"public/assets/play.png"
@@ -51,7 +51,7 @@ export class UI {
 		const gridEnd = gridPos.x + gridWidth + margin;
 		boardbg.position.set(gridEnd, gridPos.y + margin);
 		boardbg.width = window.innerWidth - gridEnd - margin;
-		boardbg.height = 100;
+		boardbg.height = 200;
 		const text = this.renderer.write(
 			`Move : ${this.move}`,
 			boardbg.position.x + boardbg.width / 2,
@@ -66,7 +66,7 @@ export class UI {
 		const margin = 50;
 		boardbg.position.set(margin, gridPos.y + margin);
 		boardbg.width = gridPos.x - 2 * margin;
-		boardbg.height = 100;
+		boardbg.height = 200;
 		const text = this.renderer.write(
 			`Score: ${this.score}`,
 			boardbg.position.x + boardbg.width / 2 - 40,
@@ -116,7 +116,7 @@ export class UI {
 		const playBackground = this.renderer.createplayBackground(
 			this.playBackgroundTexture,
 			600, // Width
-			100 // Height
+			300 // Height
 		);
 
 		const playText = this.renderer.createplayText(
@@ -127,11 +127,11 @@ export class UI {
 
 		const playIcon = this.renderer.createplayButton(
 			this.playTexture,
-			100, // Width
-			100, // Height
+			200, // Width
+			200, // Height
 			{
 				x: this.renderer.app.screen.width / 2,
-				y: this.renderer.app.screen.height / 2 + 150,
+				y: this.renderer.app.screen.height / 2 + 300,
 			}
 		);
 
