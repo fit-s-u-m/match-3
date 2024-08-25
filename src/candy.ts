@@ -17,12 +17,12 @@ export class Candies {
 	}
 	async init() {
 		const candyPaths = [
-			"assets/blue.png",
-			"assets/green.png",
-			"assets/orange.png",
-			"assets/red.png",
-			"assets/pink.png",
-			"assets/yellow.png",
+			"ui/stone_blue.png",
+			"ui/stone_green.png",
+			"ui/stone_pink.png",
+			"ui/stone_yellow.png",
+			// "assets/pink.png",
+			// "assets/yellow.png",
 		];
 		const promise = candyPaths.map((path) => this.renderer.loadAsset(path));
 		this.candyTextures = await Promise.all(promise);

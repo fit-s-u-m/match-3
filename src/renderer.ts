@@ -87,7 +87,7 @@ export class Renderer {
 		const style = new PIXI.TextStyle({
 			fill: "white",
 			fontSize: 80,
-			fontFamily: "Arial",
+			fontFamily: "Bubblegum Sans",
 			align: "center",
 			fontWeight: "bold",
 		});
@@ -153,7 +153,7 @@ export class Renderer {
 		const style = new PIXI.TextStyle({
 			fill: "white",
 			fontSize: 200,
-			fontFamily: "Arial",
+			fontFamily: "Bubblegum Sans",
 			fontWeight: "bold",
 			align: "center",
 		});
@@ -194,5 +194,14 @@ export class Renderer {
 		playIcon.interactive = true;
 		(playIcon as any).buttonMode = true;
 		return playIcon;
+	}
+	bounce(sprite: PIXI.Sprite, options = { amplitude: 10, speed: 0.05 }) {
+		const originalY = sprite.y;
+		let elapsed = 0;
+
+		this.app.ticker.add(() => {
+			elapsed += options.speed;
+			sprite.y = originalY + Math.sin(elapsed) * options.amplitude;
+		});
 	}
 }

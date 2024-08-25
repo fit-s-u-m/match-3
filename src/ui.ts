@@ -115,7 +115,7 @@ export class UI {
 	createplayScreen() {
 		const playBackground = this.renderer.createplayBackground(
 			this.playBackgroundTexture,
-			600, // Width
+			650	, // Width
 			300 // Height
 		);
 
@@ -135,8 +135,8 @@ export class UI {
 			}
 		);
 
+		this.renderer.bounce(playIcon, { amplitude: 20, speed: 0.1 });
 		playIcon.on("pointerdown", this.onplayClick.bind(this));
-
 		this.renderer.stage(playBackground, playText, playIcon);
 
 		this.playBackground = playBackground;
