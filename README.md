@@ -23,8 +23,9 @@ To run this project locally, you need to have [Bun](https://bun.sh/) installed. 
 
 1. **Clone the Repository**:
     ```bash
-    git clone <repository-url>
-    cd <repository-directory>
+    git clone (https://github.com/Qene-Internship/match3.git)
+    
+    cd (match3)
     ```
 
 2. **Install Dependencies**:
