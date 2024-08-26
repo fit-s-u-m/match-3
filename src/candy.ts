@@ -17,12 +17,12 @@ export class Candies {
 	}
 	async init() {
 		const candyPaths = [
-			"assets/blue.png",
-			"assets/green.png",
-			"assets/orange.png",
-			"assets/red.png",
-			"assets/pink.png",
-			"assets/yellow.png",
+			"ui/stone_blue.png",
+			"ui/stone_green.png",
+			"ui/stone_pink.png",
+			"ui/stone_yellow.png",
+			// "assets/pink.png",
+			// "assets/yellow.png",
 		];
 		const promise = candyPaths.map((path) => this.renderer.loadAsset(path));
 		this.candyTextures = await Promise.all(promise);
@@ -206,14 +206,14 @@ export class Candies {
 		candy1.y = this.prevPos.y;
 	}
 	async fallDown(candy: SPRITE, y: number, time = 6) {
-		const speed = 8
+		const speed = 8;
 		if (candy) {
 			const id = setInterval(() => {
-				candy.y += speed
+				candy.y += speed;
 				if (candy.y >= y) {
-					clearInterval(id)
+					clearInterval(id);
 				}
-			}, time)
+			}, time);
 		}
 	}
 	sleep(ms: number) {

@@ -19,9 +19,9 @@ export class UI {
 	scoreBoard: any;
 	soundManager = new Sound();
 
-	playBackground: any | null = null; // Allow null
-	playText: TEXT | null = null; // Allow null
-	playIcon: any | null = null; // Allow null
+	playBackground: any | null = null;
+	playText: TEXT | null = null;
+	playIcon: any | null = null;
 	game: Game;
 	constructor(renderer: RENDERER, game: Game) {
 		this.renderer = renderer;
@@ -29,17 +29,17 @@ export class UI {
 	}
 	async init() {
 		this.boardTexture = await this.renderer.loadAsset(
-			"../public/assets/level1.png"
+			"public/ui/time_scores.png"
 		);
 		this.gameOverBackgroundTexture = await this.renderer.loadAsset(
-			"public/assets/level1.png"
+			"public/ui/button.png"
 		);
 		this.restartTexture = await this.renderer.loadAsset(
-			"public/assets/restart-2.png"
+			"public/assets/restart.png"
 		);
 
 		this.playBackgroundTexture = await this.renderer.loadAsset(
-			"public/assets/level1.png"
+			"public/ui/button.png"
 		);
 		this.playTexture = await this.renderer.loadAsset(
 			"public/assets/play.png"
@@ -81,8 +81,8 @@ export class UI {
 		const verticalOffset = 250;
 		const gameOverBackground = this.renderer.createGameOverBackground(
 			this.gameOverBackgroundTexture,
-			600, // Width
-			100, // Height
+			400, // Width
+			200	, // Height
 			verticalOffset
 		);
 
@@ -115,8 +115,8 @@ export class UI {
 	createplayScreen() {
 		const playBackground = this.renderer.createplayBackground(
 			this.playBackgroundTexture,
-			600, // Width
-			100 // Height
+			400, // Width
+			200 // Height
 		);
 
 		const playText = this.renderer.createplayText(
@@ -127,16 +127,16 @@ export class UI {
 
 		const playIcon = this.renderer.createplayButton(
 			this.playTexture,
-			100, // Width
-			100, // Height
+			150, // Width
+			150, // Height
 			{
 				x: this.renderer.app.screen.width / 2,
-				y: this.renderer.app.screen.height / 2 + 150,
+				y: this.renderer.app.screen.height / 2 + 200,
 			}
 		);
 
+		this.renderer.bounce(playIcon, { amplitude: 20, speed: 0.08});
 		playIcon.on("pointerdown", this.onplayClick.bind(this));
-
 		this.renderer.stage(playBackground, playText, playIcon);
 
 		this.playBackground = playBackground;
@@ -154,6 +154,7 @@ export class UI {
 		this.soundManager.playSound("backgroundMusic");
 		this.soundManager.setVolume("backgroundMusic", 0.1);
 	}
+
 	removePlayScreen() {
 		if (this.playBackground) {
 			this.renderer.remove(this.playBackground);
@@ -175,10 +176,10 @@ export class UI {
 		this.moveText.text = `Move : ${move}`;
 	}
 	updateScore(matches: MATCH[]) {
-		const scoreCount = matches.map(match => (match.count - 2) * 60);
+		const scoreCount = matches.map((match) => (match.count - 2) * 60);
 		const score = scoreCount.reduce((acc, curr) => acc + curr, 0);
 		this.score += score;
-		this.scoreText.text = `Score :${this.score}`;
+		this.scoreText.text = `Score : ${this.score}`;
 	}
 	getMoveCount() {
 		return this.move;

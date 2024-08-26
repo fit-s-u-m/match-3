@@ -32,7 +32,7 @@ export class Renderer {
 		document.body.appendChild(this.app.canvas);
 
 		// setting the background
-		const bgPath = "../public/assets/bg5-2.jpg";
+		const bgPath = "public/ui/bg_night.jpg";
 		const backgroundTexture = await PIXI.Assets.load(bgPath);
 		const backgroundSprite = new PIXI.Sprite(backgroundTexture);
 		backgroundSprite.zIndex = -10;
@@ -43,7 +43,6 @@ export class Renderer {
 		this.gameOverBackgroundTexture = await PIXI.Assets.load(
 			"public/assets/level1.png"
 		);
-		this.restartTexture = await PIXI.Assets.load("public/assets/restart.png");
 	}
 	stage(...element: ELEMENT[]) {
 		element.forEach((element) => this.app.stage.addChild(element));
@@ -108,7 +107,7 @@ export class Renderer {
 		const style = new PIXI.TextStyle({
 			fill: "white",
 			fontSize: 40,
-			fontFamily: "Arial",
+			fontFamily: "Bubblegum Sans",
 			align: "center",
 			fontWeight: "bold",
 		});
@@ -122,7 +121,7 @@ export class Renderer {
 		const style = new PIXI.TextStyle({
 			fill: "white",
 			fontSize: 80,
-			fontFamily: "Arial",
+			fontFamily: "Bubblegum Sans",
 			fontWeight: "bold",
 			align: "center",
 		});
@@ -173,8 +172,8 @@ export class Renderer {
 	createplayText(text: string, x: number, y: number) {
 		const style = new PIXI.TextStyle({
 			fill: "white",
-			fontSize: 80,
-			fontFamily: "Arial",
+			fontSize: 100,
+			fontFamily: "Bubblegum Sans",
 			fontWeight: "bold",
 			align: "center",
 		});
@@ -220,5 +219,14 @@ export class Renderer {
 		playIcon.interactive = true;
 		(playIcon as any).buttonMode = true;
 		return playIcon;
+	}
+	bounce(sprite: PIXI.Sprite, options = { amplitude: 10, speed: 0.05 }) {
+		const originalY = sprite.y;
+		let elapsed = 0;
+
+		this.app.ticker.add(() => {
+			elapsed += options.speed;
+			sprite.y = originalY + Math.sin(elapsed) * options.amplitude;
+		});
 	}
 }

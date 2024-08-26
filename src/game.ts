@@ -11,7 +11,7 @@ export class Game {
 	gridInfo: GRIDINFO;
 	candies: Candies;
 	ui: UI;
-	moveLimit: number = 400;
+	moveLimit: number = 2;
 	moveCounter: number = 0;
 	gameOver: boolean = false;
 	soundManager = new Sound();
@@ -97,5 +97,4 @@ export class Game {
 		this.soundManager.setVolume("game-overMusic", 0.5);
 		this.candies.setGameOver();
 	}
-
 }
