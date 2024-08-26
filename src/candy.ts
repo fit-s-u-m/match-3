@@ -21,8 +21,6 @@ export class Candies {
 			"ui/stone_green.png",
 			"ui/stone_pink.png",
 			"ui/stone_yellow.png",
-			// "assets/pink.png",
-			// "assets/yellow.png",
 		];
 		const promise = candyPaths.map((path) => this.renderer.loadAsset(path));
 		this.candyTextures = await Promise.all(promise);

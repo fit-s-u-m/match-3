@@ -31,7 +31,7 @@ export class Renderer {
 		document.body.appendChild(this.app.canvas);
 
 		// setting the background
-		const bgPath = "public/ui/bg_night.jpg";
+		const bgPath = "public/ui/bg.png";
 		const backgroundTexture = await PIXI.Assets.load(bgPath);
 		const backgroundSprite = new PIXI.Sprite(backgroundTexture);
 		backgroundSprite.zIndex = -10;
@@ -39,9 +39,6 @@ export class Renderer {
 		backgroundSprite.height = this.app.screen.height;
 		this.stage(backgroundSprite);
 
-		this.gameOverBackgroundTexture = await PIXI.Assets.load(
-			"public/assets/level1.png"
-		);
 	}
 	stage(...element: ELEMENT[]) {
 		element.forEach((element) => this.app.stage.addChild(element));
