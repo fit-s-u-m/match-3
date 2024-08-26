@@ -1,5 +1,4 @@
 import * as PIXI from "pixi.js";
-
 import { ELEMENT, VECTOR } from "../types.ts";
 
 export class Renderer {
@@ -55,6 +54,7 @@ export class Renderer {
 		});
 	}
 
+
 	getMid() {
 		return { x: this.app.screen.width / 2, y: this.app.screen.height / 2 };
 	}
@@ -64,6 +64,7 @@ export class Renderer {
 	createTexture(path: string) {
 		return PIXI.Texture.from(path);
 	}
+
 	createRect(width: number, height: number, color: string) {
 		return new PIXI.Graphics().rect(0, 0, width, height).fill(color);
 	}
@@ -81,6 +82,11 @@ export class Renderer {
 			}
 		}, context);
 	}
+	createSpritesheet(data: any) {
+		const texture = PIXI.Texture.from(data.meta.image);
+		return new PIXI.Spritesheet(texture, data)
+	}
+
 	particleAnimation(callback: Function, context: any = null) {
 		const ticker = new PIXI.Ticker();
 		this.particleTicker = ticker;

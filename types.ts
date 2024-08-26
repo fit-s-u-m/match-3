@@ -15,6 +15,7 @@ export type CANDYINFO = {
 	candyId: number;
 	candy?: SPRITE;
 };
+export type SPRITESHEET = PIXI.Spritesheet
 export type GRIDINFO = CANDYINFO[][];
 export type GRID = Grid;
 export type Ui = UI;

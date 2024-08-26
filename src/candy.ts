@@ -1,5 +1,6 @@
-import { RENDERER, SPRITE, TEXTURE, GRID, Ui, CANDYINFO } from "../types";
+import { RENDERER, SPRITE, TEXTURE, GRID, Ui, CANDYINFO, SPRITESHEET } from "../types";
 import { Sound } from "./sound";
+import { data } from "../public/assets/particle/particle.ts"
 export class Candies {
 	renderer: RENDERER;
 	candyTextures: TEXTURE[];
@@ -9,6 +10,7 @@ export class Candies {
 	private moveCounter: number = 0;
 	private ui: Ui;
 	private gameOver: boolean = false;
+	spriteSheet: SPRITESHEET
 
 	soundManager = new Sound();
 
@@ -25,6 +27,10 @@ export class Candies {
 			// "assets/yellow.png",
 		];
 		const promise = candyPaths.map((path) => this.renderer.loadAsset(path));
+		await this.renderer.loadAsset(data.meta.image) //  particle
+		const spritesheet = this.renderer.createSpritesheet(data)
+		await spritesheet.parse() // generate spritesheet
+		this.spriteSheet = spritesheet
 		this.candyTextures = await Promise.all(promise);
 	}
 	createCandy(candyId: number) {
@@ -55,18 +61,19 @@ export class Candies {
 		}))
 	}
 	async explosion(x: number, y: number, cellSize: number) {
+		// let textures: TEXTURE[] = []
+		// for (let i = 1; i <= 5; i++) {
+		// 	const path = `assets/particle/explosion_${i}.png`
+		// 	const texture = await this.renderer.loadAsset(path)
+		// 	textures.push(texture)
+		// }
 		return new Promise<void>(async (resolve) => {
-			let textures: TEXTURE[] = []
-			for (let i = 1; i <= 5; i++) {
-				const path = `assets/particle/explosion_${i}.png`
-				const texture = await this.renderer.loadAsset(path)
-				textures.push(texture)
-			}
-			const animationSprite = this.renderer.animatedSprite(textures)
+
+			const animationSprite = this.renderer.animatedSprite(this.spriteSheet.animations.explosion)
 			this.renderer.stage(animationSprite)
 			animationSprite.position.set(x, y)
 			animationSprite.setSize(cellSize, cellSize)
-			animationSprite.animationSpeed = 0.1
+			animationSprite.animationSpeed = 0.4
 			animationSprite.loop = false
 			animationSprite.zIndex = 10
 			animationSprite.play()

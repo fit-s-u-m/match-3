@@ -1,7 +1,8 @@
 import { RENDERER, TEXTURE, GRIDINFO, MATCH, DIRECTION, SPRITE } from "../types";
-import { Candies } from "./candy";
 
+import { Candies } from "./candy";
 import { Sound } from "./sound";
+
 export class Grid {
 	gridImg: TEXTURE;
 	renderer: RENDERER;
