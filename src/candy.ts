@@ -47,6 +47,36 @@ export class Candies {
 		this.grid = grid;
 		this.ui = ui;
 	}
+	async destroy(candiesToRemove: { candy: SPRITE, x: number, y: number, cellSize: number }[]) {
+		return Promise.all(candiesToRemove.map(async candyToRemove => {
+			const candy = candyToRemove.candy
+			candy.destroy()
+			await this.explosion(candyToRemove.x, candyToRemove.y, candyToRemove.cellSize)
+		}))
+	}
+	async explosion(x: number, y: number, cellSize: number) {
+		return new Promise<void>(async (resolve) => {
+			let textures: TEXTURE[] = []
+			for (let i = 1; i <= 5; i++) {
+				const path = `assets/particle/explosion_${i}.png`
+				const texture = await this.renderer.loadAsset(path)
+				textures.push(texture)
+			}
+			const animationSprite = this.renderer.animatedSprite(textures)
+			this.renderer.stage(animationSprite)
+			animationSprite.position.set(x, y)
+			animationSprite.setSize(cellSize, cellSize)
+			animationSprite.animationSpeed = 0.1
+			animationSprite.loop = false
+			animationSprite.zIndex = 10
+			animationSprite.play()
+			animationSprite.onComplete = () => {
+				animationSprite.destroy()
+				resolve()
+			}
+
+		})
+	}
 
 	dragMove(event: any) {
 		if (this.gameOver || !this.dragTarget) return;

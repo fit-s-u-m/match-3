@@ -69,7 +69,7 @@ export class Game {
 
 					const point = this.renderer.createVector(positionX, positionY);
 
-					this.grid.explosion(point.x, point.y)
+					// this.grid.explosion(point.x, point.y)
 					// const particle = new Particles(this.renderer, point, 30)
 					// await particle.draw()
 					// this.particles.push(particle);
