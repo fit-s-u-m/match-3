@@ -68,9 +68,11 @@ export class Game {
 						: start.r * cellSize + cellSize / 2 + gridPos.y
 
 					const point = this.renderer.createVector(positionX, positionY);
-					const particle = new Particles(this.renderer, point, 50)
-					await particle.draw()
-					this.particles.push(particle);
+
+					this.grid.explosion(point.x, point.y)
+					// const particle = new Particles(this.renderer, point, 30)
+					// await particle.draw()
+					// this.particles.push(particle);
 				})
 
 				if (matches.length > 0) {

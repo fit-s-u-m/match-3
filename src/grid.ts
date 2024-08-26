@@ -139,6 +139,29 @@ export class Grid {
 		}
 		return matches;
 	}
+	async explosion(x: number, y: number) {
+		let textures: TEXTURE[] = []
+		for (let i = 1; i <= 5; i++) {
+			const path = `assets/particle/explosion_${i}.png`
+			const texture = await this.renderer.loadAsset(path)
+			textures.push(texture)
+		}
+		console.log(textures)
+		const animationSprite = this.renderer.animatedSprite(textures)
+		animationSprite.position.set(x, y)
+		// animationSprite.anchor.set(0.5)
+		animationSprite.scale.set(0.5)
+		animationSprite.animationSpeed = 0.1
+		animationSprite.zIndex = 10
+		this.renderer.stage(animationSprite)
+		animationSprite.play()
+		// for (let i = 0; i < 4; i++) {
+		// 	animationSprite.gotoAndPlay(i)
+		// 	animationSprite.animationSpeed = 0.001
+		// 	// animationSprite.loop = true
+		// 	this.renderer.stage(animationSprite)
+		// }
+	}
 	async fillCol(matches: MATCH[], candies: Candies) {
 		if (matches.length == 0) return;
 		let colToClear: Set<number> = new Set();

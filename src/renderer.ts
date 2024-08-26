@@ -62,6 +62,9 @@ export class Renderer {
 	async loadAsset(path: string) {
 		return await PIXI.Assets.load(path);
 	}
+	createTexture(path: string) {
+		return PIXI.Texture.from(path);
+	}
 	createRect(width: number, height: number, color: string) {
 		return new PIXI.Graphics().rect(0, 0, width, height).fill(color);
 	}
@@ -198,7 +201,9 @@ export class Renderer {
 	createVector(x: number, y: number): VECTOR {
 		return new PIXI.Point(x, y);
 	}
-
+	animatedSprite(texture: PIXI.Texture[]) {
+		return new PIXI.AnimatedSprite(texture);
+	}
 	createplayButton(
 		texture: PIXI.Texture,
 		width: number,
