@@ -19,10 +19,10 @@ export class Candies {
 	}
 	async init() {
 		const candyPaths = [
-			"ui/stone_blue.png",
-			"ui/stone_green.png",
-			"ui/stone_pink.png",
-			"ui/stone_yellow.png",
+			"/assets/ui/stone_blue.png",
+			"/assets/ui/stone_green.png",
+			"/assets/ui/stone_pink.png",
+			"/assets/ui/stone_yellow.png",
 		];
 		const promise = candyPaths.map((path) => this.renderer.loadAsset(path));
 		await this.renderer.loadAsset(data.meta.image) //  particle
@@ -212,7 +212,7 @@ export class Candies {
 	}
 	async fallDown(candy: SPRITE, y: number, time = 6) {
 		const speed = 8;
-		if (candy) {
+		if (candy && candy.y != undefined) {
 			const id = setInterval(() => {
 				candy.y += speed;
 				if (candy.y >= y) {

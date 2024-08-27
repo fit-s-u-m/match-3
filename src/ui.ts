@@ -29,21 +29,19 @@ export class UI {
 	}
 	async init() {
 		this.boardTexture = await this.renderer.loadAsset(
-			"public/ui/time_scores.png"
+			"/assets/ui/time_scores.png"
 		);
 		this.gameOverBackgroundTexture = await this.renderer.loadAsset(
-			"public/ui/button.png"
+			"/assets/ui/button.png"
 		);
 		this.restartTexture = await this.renderer.loadAsset(
-			"public/assets/restart.png"
+			"/assets/ui/restart.png"
 		);
 
 		this.playBackgroundTexture = await this.renderer.loadAsset(
-			"public/ui/button.png"
+			"/assets/ui/button.png"
 		);
-		this.playTexture = await this.renderer.loadAsset(
-			"public/assets/play.png"
-		);
+		this.playTexture = await this.renderer.loadAsset("/assets/ui/play.png");
 	}
 	createCounterBoard(gridPos: { x: number; y: number }, gridWidth: number) {
 		const boardbg = this.renderer.createSprite(this.boardTexture);
@@ -82,7 +80,7 @@ export class UI {
 		const gameOverBackground = this.renderer.createGameOverBackground(
 			this.gameOverBackgroundTexture,
 			400, // Width
-			200	, // Height
+			200, // Height
 			verticalOffset
 		);
 
@@ -135,7 +133,7 @@ export class UI {
 			}
 		);
 
-		this.renderer.bounce(playIcon, { amplitude: 20, speed: 0.08});
+		this.renderer.bounce(playIcon, { amplitude: 20, speed: 0.08 });
 		playIcon.on("pointerdown", this.onplayClick.bind(this));
 		this.renderer.stage(playBackground, playText, playIcon);
 

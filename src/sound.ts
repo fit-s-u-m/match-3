@@ -25,13 +25,13 @@ export class Sound {
 	}
 	private async loadSounds() {
 		const sounds = [
-			{ key: "backgroundMusic", path: "public/assets/sounds/music3.mp3" },
-			{ key: "game-overMusic", path: "public/assets/sounds/game-over.wav" },
-			{ key: "wrongMusic", path: "public/assets/sounds/error.wav" },
-			{ key: "swapMusic", path: "public/assets/sounds/swap.ogg" },
-			{ key: "scoreMusic", path: "public/assets/sounds/next-level.wav" },
-			{ key: "buttonClick", path: "public/assets/sounds/select.wav" },
-			{ key: "matchMusic", path: "public/assets/sounds/match.wav" },
+			{ key: "backgroundMusic", path: "/assets/sounds/music3.mp3" },
+			{ key: "game-overMusic", path: "/assets/sounds/game-over.wav" },
+			{ key: "wrongMusic", path: "/assets/sounds/error.wav" },
+			{ key: "swapMusic", path: "/assets/sounds/swap.ogg" },
+			{ key: "scoreMusic", path: "/assets/sounds/next-level.wav" },
+			{ key: "buttonClick", path: "/assets/sounds/select.wav" },
+			{ key: "matchMusic", path: "/assets/sounds/match.wav" },
 		];
 		// Load all sounds
 		for (const soundInfo of sounds) {

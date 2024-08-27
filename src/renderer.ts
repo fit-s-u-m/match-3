@@ -31,14 +31,13 @@ export class Renderer {
 		document.body.appendChild(this.app.canvas);
 
 		// setting the background
-		const bgPath = "public/ui/bg.png";
+		const bgPath = "/assets/ui/bg.png";
 		const backgroundTexture = await PIXI.Assets.load(bgPath);
 		const backgroundSprite = new PIXI.Sprite(backgroundTexture);
 		backgroundSprite.zIndex = -10;
 		backgroundSprite.width = this.app.screen.width;
 		backgroundSprite.height = this.app.screen.height;
 		this.stage(backgroundSprite);
-
 	}
 	stage(...element: ELEMENT[]) {
 		element.forEach((element) => this.app.stage.addChild(element));
@@ -50,7 +49,6 @@ export class Renderer {
 			}
 		});
 	}
-
 
 	getMid() {
 		return { x: this.app.screen.width / 2, y: this.app.screen.height / 2 };
@@ -68,7 +66,11 @@ export class Renderer {
 	createSprite(texture: any) {
 		return new PIXI.Sprite(texture);
 	}
-	async animationLoop(callback: Function, context: any = null, speed: number = 700) {
+	async animationLoop(
+		callback: Function,
+		context: any = null,
+		speed: number = 700
+	) {
 		this.app.ticker.autoStart = false;
 		let elapsedData = 0;
 		this.app.ticker.add((delta) => {
@@ -81,7 +83,7 @@ export class Renderer {
 	}
 	createSpritesheet(data: any) {
 		const texture = PIXI.Texture.from(data.meta.image);
-		return new PIXI.Spritesheet(texture, data)
+		return new PIXI.Spritesheet(texture, data);
 	}
 
 	particleAnimation(callback: Function, context: any = null) {

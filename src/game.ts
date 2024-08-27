@@ -11,7 +11,7 @@ export class Game {
 	gridInfo: GRIDINFO;
 	candies: Candies;
 	ui: UI;
-	moveLimit: number = 200;
+	moveLimit: number = 400;
 	moveCounter: number = 0;
 	gameOver: boolean = false;
 	soundManager = new Sound();
@@ -79,11 +79,12 @@ export class Game {
 					this.ui.updateScore(matches);
 				}
 				this.grid.fillCol(matches, this.candies);
-				this.moveCounter = this.ui.getMoveCount();
-				if (this.moveCounter >= this.moveLimit) {
-					this.gameOver = true;
-					this.handleGameOver();
-				}
+				this.ui.updateScore(matches);
+			}
+			this.moveCounter = this.ui.getMoveCount();
+			if (this.moveCounter >= this.moveLimit) {
+				this.gameOver = true;
+				this.handleGameOver();
 			}
 		});
 		this.renderer.particleAnimation(() => {
