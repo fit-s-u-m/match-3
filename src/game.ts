@@ -11,9 +11,10 @@ export class Game {
 	gridInfo: GRIDINFO;
 	candies: Candies;
 	ui: UI;
-	moveLimit: number = 400;
+	moveLimit: number = 2;
 	moveCounter: number = 0;
 	gameOver: boolean = false;
+	private gameOverHandled: boolean = false;
 	soundManager = new Sound();
 	particles: Particles[] = [];
 	constructor() {
@@ -82,20 +83,25 @@ export class Game {
 				this.ui.updateScore(matches);
 			}
 			this.moveCounter = this.ui.getMoveCount();
-			if (this.moveCounter >= this.moveLimit) {
+			if (this.moveCounter >= this.moveLimit && !this.gameOver) {
 				this.gameOver = true;
 				this.handleGameOver();
 			}
+			
 		});
 		this.renderer.particleAnimation(() => {
 			this.particles.forEach(particle => particle.update())
 		})
 	}
 
-	handleGameOver() {
-		this.ui.createGameOverScreen();
-		this.soundManager.playSound("game-overMusic");
-		this.soundManager.setVolume("game-overMusic", 0.5);
-		this.candies.setGameOver();
-	}
+    handleGameOver() {
+        if (this.gameOverHandled) return; // Prevent multiple executions
+        this.gameOverHandled = true;
+        
+        this.ui.createGameOverScreen();
+        this.soundManager.playSound("game-overMusic");
+        this.soundManager.setVolume("game-overMusic", 2);
+        this.candies.setGameOver();
+    }
+	
 }
