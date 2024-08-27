@@ -23,9 +23,9 @@ To run this project locally, you need to have [Bun](https://bun.sh/) installed. 
 
 1. **Clone the Repository**:
     ```bash
-    git clone (https://github.com/Qene-Internship/match3.git)
+    git clone https://github.com/Qene-Internship/match3.git
     
-    cd (match3)
+    cd match3
     ```
 
 2. **Install Dependencies**:
@@ -43,19 +43,25 @@ To run this project locally, you need to have [Bun](https://bun.sh/) installed. 
 
 - **Play Button**: The button will be visible when the game loads , Click the play button to start the game.  
 - **Swapping Candies**: Click and drag a candy to swap it with an adjacent one. If the swap results in a match, the candies will swap; otherwise, they will revert to their original positions.
-- **Score **: As you progress, your score will increase.
+- **Score**: As you progress, your score will increase.
 - **Sound Effects**: Enjoy sound effects triggered by interactions such as swaps and matches.
 
 ## Previews
 
 ### Title Screen
-![Title Screen](public/assets/screenrecords/play.mp4)
+
+
+https://github.com/user-attachments/assets/a0b6c2cf-3cf1-4cd1-9a2a-b140f020e816
 
 ### Gameplay and Match Found
-![Gameplay](public/assets/screenrecords/game.mp4)
+
+
+https://github.com/user-attachments/assets/48a69c48-f421-48cb-a5e0-b8e9b931a46a
 
 ### Gameover
-![Match Found](public/assets/screenrecords/gameover.mp4)
+
+
+https://github.com/user-attachments/assets/80b75eb9-1bf6-42f4-9377-ffc844679c56
 
 
 ## Contributing
