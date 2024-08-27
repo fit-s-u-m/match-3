@@ -101,6 +101,9 @@ export class Game {
         this.ui.createGameOverScreen();
         this.soundManager.playSound("game-overMusic");
         this.soundManager.setVolume("game-overMusic", 2);
+		this.soundManager.stopSound("swapMusic");
+		this.soundManager.stopSound("wrongMusic");
+		this.soundManager.stopSound("matchMusic");
         this.candies.setGameOver();
     }
 	
