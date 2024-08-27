@@ -22,6 +22,15 @@ export class UI {
 	playBackground: any | null = null;
 	playText: TEXT | null = null;
 	playIcon: any | null = null;
+
+
+
+	gameoverBackground: any | null = null;
+	gameoverText: TEXT | null = null;
+	restartIcon: any | null = null;
+
+
+
 	game: Game;
 	constructor(renderer: RENDERER, game: Game) {
 		this.renderer = renderer;
@@ -104,12 +113,38 @@ export class UI {
 		restartIcon.on("pointerdown", this.onRestartClick.bind(this));
 
 		this.renderer.stage(gameOverBackground, gameOverText, restartIcon);
+
+		this.gameoverBackground=gameOverBackground
+		this.gameoverText=gameOverText
+		this.restartIcon=restartIcon
 	}
 	onRestartClick() {
 		this.soundManager.playSound("buttonClick");
 		this.soundManager.setVolume("buttonClick", 0.1);
-		location.reload(); // for now it just refreshes the page
+		this.removegameoverScreen() ;
+		window.location.reload();
 	}
+
+
+
+
+	removegameoverScreen() {
+		if (this.gameoverBackground) {
+			this.renderer.remove(this.gameoverBackground);
+			this.gameoverBackground = null;
+		}
+		if (this.gameoverText) {
+			this.renderer.remove(this.gameoverText);
+			this.gameoverText = null;
+		}
+		if (this.restartIcon) {
+			this.restartIcon.off("pointerdown", this.onplayClick.bind(this)); // Remove event listener
+			this.renderer.remove(this.restartIcon);
+			this.restartIcon = null;
+		}
+	}
+
+	
 	createplayScreen() {
 		const playBackground = this.renderer.createplayBackground(
 			this.playBackgroundTexture,
