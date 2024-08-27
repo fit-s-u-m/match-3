@@ -1,7 +1,8 @@
-import { RENDERER, TEXTURE, GRIDINFO, MATCH, DIRECTION } from "../types";
-import { Candies } from "./candy";
+import { RENDERER, TEXTURE, GRIDINFO, MATCH, DIRECTION, SPRITE } from "../types";
 
+import { Candies } from "./candy";
 import { Sound } from "./sound";
+
 export class Grid {
 	gridImg: TEXTURE;
 	renderer: RENDERER;
@@ -143,25 +144,17 @@ export class Grid {
 		if (matches.length == 0) return;
 		let colToClear: Set<number> = new Set();
 
-		// Step 1: Clear matched candies and collect columns to clear
-		const matchPromises = matches.map((match: MATCH) => {
-			return new Promise<void>((resolve) => {
-				this.clearMatched(match, colToClear);
-				resolve();
-			});
-		});
+		const matchPromises = matches.map((match: MATCH) => this.clearMatched(match, colToClear, candies));
 		await Promise.all(matchPromises);
 		this.soundManager.playSound("matchMusic");
 		this.soundManager.setVolume("matchMusic", 0.3);
 
 		const columns = Array.from(colToClear);
-		const columnPromises = columns.map((column: number) =>
-			this.spawnAndFill(column, candies)
-		);
+		const columnPromises = columns.map((column: number) => this.spawnAndFill(column, candies));
 		await Promise.all(columnPromises);
 	}
-	clearMatched(item: MATCH, colToClear: Set<number> = new Set()) {
-		// has side effect
+	async clearMatched(item: MATCH, colToClear: Set<number> = new Set(), candies: Candies) { // has side effect
+		const candyToRemove: { candy: SPRITE, x: number, y: number, cellSize: number }[] = [];
 		for (let count = 0; count < item.count; count++) {
 			const row =
 				item.direction == "vertical"
@@ -171,15 +164,17 @@ export class Grid {
 				item.direction == "horizontal"
 					? item.startIndex.c + count
 					: item.startIndex.c;
+			const gridInfo = this.gridInfo[row][col];
 
-			const candy = this.gridInfo[row][col].candy;
+			const candy = gridInfo.candy;
 			if (candy) {
-				candy.destroy();
+				colToClear.add(col);
+				candyToRemove.push({ candy, x: gridInfo.x, y: gridInfo.y, cellSize: gridInfo.cellSize })
 				this.gridInfo[row][col].candyId = -1;
 				this.gridInfo[row][col].candy = undefined;
-				colToClear.add(col);
 			}
 		}
+		await candies.destroy(candyToRemove)
 	}
 	async spawnAndFill(column: number, candies: Candies) {
 		let emptyCount = 0;

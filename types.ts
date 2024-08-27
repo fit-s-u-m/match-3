@@ -15,6 +15,7 @@ export type CANDYINFO = {
 	candyId: number;
 	candy?: SPRITE;
 };
+export type SPRITESHEET = PIXI.Spritesheet
 export type GRIDINFO = CANDYINFO[][];
 export type GRID = Grid;
 export type Ui = UI;
@@ -25,3 +26,5 @@ export type MATCH = {
 	direction: DIRECTION;
 	candyId: number;
 };
+export type VECTOR = PIXI.Point
+export type CONTAINER = PIXI.Container

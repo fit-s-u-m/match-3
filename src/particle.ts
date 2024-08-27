@@ -41,7 +41,7 @@ export class Particle {
 		this.particleTexture = await this.renderer.loadAsset("assets/particle.png")
 		this.particle = this.renderer.createSprite(this.particleTexture)
 		this.particle.anchor.set(0.5)
-		this.particle.setSize(100, 100)
+		this.particle.setSize(150, 150)
 
 		this.particle.position.set(this.position.x, this.position.y)
 		this.particle.zIndex = 1000

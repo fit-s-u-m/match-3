@@ -1,5 +1,6 @@
-import { RENDERER, SPRITE, TEXTURE, GRID, Ui, CANDYINFO } from "../types";
+import { RENDERER, SPRITE, TEXTURE, GRID, Ui, CANDYINFO, SPRITESHEET } from "../types";
 import { Sound } from "./sound";
+import { data } from "../public/assets/particle/particle.ts"
 export class Candies {
 	renderer: RENDERER;
 	candyTextures: TEXTURE[];
@@ -9,6 +10,7 @@ export class Candies {
 	private moveCounter: number = 0;
 	private ui: Ui;
 	private gameOver: boolean = false;
+	spriteSheet: SPRITESHEET
 
 	soundManager = new Sound();
 
@@ -23,6 +25,10 @@ export class Candies {
 			"ui/stone_yellow.png",
 		];
 		const promise = candyPaths.map((path) => this.renderer.loadAsset(path));
+		await this.renderer.loadAsset(data.meta.image) //  particle
+		const spritesheet = this.renderer.createSpritesheet(data)
+		await spritesheet.parse() // generate spritesheet
+		this.spriteSheet = spritesheet
 		this.candyTextures = await Promise.all(promise);
 	}
 	createCandy(candyId: number) {
@@ -44,6 +50,37 @@ export class Candies {
 	setGrid(grid: GRID, ui: Ui) {
 		this.grid = grid;
 		this.ui = ui;
+	}
+	async destroy(candiesToRemove: { candy: SPRITE, x: number, y: number, cellSize: number }[]) {
+		return Promise.all(candiesToRemove.map(async candyToRemove => {
+			const candy = candyToRemove.candy
+			candy.destroy()
+			await this.explosion(candyToRemove.x, candyToRemove.y, candyToRemove.cellSize)
+		}))
+	}
+	async explosion(x: number, y: number, cellSize: number) {
+		// let textures: TEXTURE[] = []
+		// for (let i = 1; i <= 5; i++) {
+		// 	const path = `assets/particle/explosion_${i}.png`
+		// 	const texture = await this.renderer.loadAsset(path)
+		// 	textures.push(texture)
+		// }
+		return new Promise<void>(async (resolve) => {
+
+			const animationSprite = this.renderer.animatedSprite(this.spriteSheet.animations.explosion)
+			this.renderer.stage(animationSprite)
+			animationSprite.position.set(x, y)
+			animationSprite.setSize(cellSize, cellSize)
+			animationSprite.animationSpeed = 0.4
+			animationSprite.loop = false
+			animationSprite.zIndex = 10
+			animationSprite.play()
+			animationSprite.onComplete = () => {
+				animationSprite.destroy()
+				resolve()
+			}
+
+		})
 	}
 
 	dragMove(event: any) {
