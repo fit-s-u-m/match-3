@@ -11,7 +11,7 @@ export class Game {
 	gridInfo: GRIDINFO;
 	candies: Candies;
 	ui: UI;
-	moveLimit: number = 2;
+	moveLimit: number = 200;
 	moveCounter: number = 0;
 	gameOver: boolean = false;
 	private gameOverHandled: boolean = false;
@@ -49,37 +49,14 @@ export class Game {
 		this.grid.gridInfo = this.gridInfo;
 		this.candies.setGrid(this.grid, this.ui);
 
-		this.renderer.animationLoop(() => {
+		this.renderer.animationLoop(async () => {
 			this.particles = []
-			if (!this.gameOver) {
-				const matches = this.grid.checkGrid();
+			if (this.gameOver) return
+			const matches = this.grid.checkGrid();
+			await this.grid.fillCol(matches, this.candies);
 
-				matches.forEach(async (match) => { // for every match
-					const cellSize = this.grid.gridInfo[0][0].cellSize;
-					const gridPos = this.grid.gridPos;
-					const middle = match.count / 2
-					const start = match.startIndex
-
-					// calculate x and y position of the match
-					const positionX = match.direction === "horizontal"
-						? ((start.c + middle) * cellSize + cellSize / 2) + gridPos.x
-						: start.c * cellSize + cellSize / 2 + gridPos.x
-					const positionY = match.direction === "vertical"
-						? (start.r + middle) * cellSize + cellSize / 2 + gridPos.y
-						: start.r * cellSize + cellSize / 2 + gridPos.y
-
-					const point = this.renderer.createVector(positionX, positionY);
-
-					// this.grid.explosion(point.x, point.y)
-					// const particle = new Particles(this.renderer, point, 30)
-					// await particle.draw()
-					// this.particles.push(particle);
-				})
-
-				if (matches.length > 0) {
-					this.ui.updateScore(matches);
-				}
-				this.grid.fillCol(matches, this.candies);
+			if (matches.length > 0) {
+				this.soundManager.playSound("swapMusic")
 				this.ui.updateScore(matches);
 			}
 			this.moveCounter = this.ui.getMoveCount();
@@ -87,24 +64,23 @@ export class Game {
 				this.gameOver = true;
 				this.handleGameOver();
 			}
-			
 		});
 		this.renderer.particleAnimation(() => {
 			this.particles.forEach(particle => particle.update())
 		})
 	}
 
-    handleGameOver() {
-        if (this.gameOverHandled) return; // Prevent multiple executions
-        this.gameOverHandled = true;
-        
-        this.ui.createGameOverScreen();
-        this.soundManager.playSound("game-overMusic");
-        this.soundManager.setVolume("game-overMusic", 2);
+	handleGameOver() {
+		if (this.gameOverHandled) return; // Prevent multiple executions
+		this.gameOverHandled = true;
+
+		this.ui.createGameOverScreen();
+		this.soundManager.playSound("game-overMusic");
+		this.soundManager.setVolume("game-overMusic", 2);
 		this.soundManager.stopSound("swapMusic");
 		this.soundManager.stopSound("wrongMusic");
 		this.soundManager.stopSound("matchMusic");
-        this.candies.setGameOver();
-    }
-	
+		this.candies.setGameOver();
+	}
+
 }

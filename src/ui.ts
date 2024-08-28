@@ -174,6 +174,7 @@ export class UI {
 		this.moveText.text = `Move : ${move}`;
 	}
 	updateScore(matches: MATCH[]) {
+		// this.soundManager.playSound("swapMusic")
 		const scoreCount = matches.map((match) => (match.count - 2) * 60);
 		const score = scoreCount.reduce((acc, curr) => acc + curr, 0);
 		this.score += score;

@@ -146,8 +146,6 @@ export class Grid {
 
 		const matchPromises = matches.map((match: MATCH) => this.clearMatched(match, colToClear, candies));
 		await Promise.all(matchPromises);
-		this.soundManager.playSound("matchMusic");
-		this.soundManager.setVolume("matchMusic", 0.3);
 
 		const columns = Array.from(colToClear);
 		const columnPromises = columns.map((column: number) => this.spawnAndFill(column, candies));
@@ -155,6 +153,8 @@ export class Grid {
 	}
 	async clearMatched(item: MATCH, colToClear: Set<number> = new Set(), candies: Candies) { // has side effect
 		const candyToRemove: { candy: SPRITE, x: number, y: number, cellSize: number }[] = [];
+		this.soundManager.setVolume("matchMusic", 0.3);
+		this.soundManager.playSound("matchMusic");
 		for (let count = 0; count < item.count; count++) {
 			const row =
 				item.direction == "vertical"
@@ -188,7 +188,7 @@ export class Grid {
 				const candyMoving = this.gridInfo[r][column];
 				const candyMovingTo = this.gridInfo[r + emptyCount][column];
 				if (candyMoving.candy && candyMovingTo.y) {
-					await candies.fallDown(candyMoving.candy, candyMovingTo.y, 3);
+					await candies.fallDown(candyMoving.candy, candyMovingTo.y, 6);
 				}
 				// Set the new slot
 				this.gridInfo[r + emptyCount][column].candyId = candyMoving.candyId;

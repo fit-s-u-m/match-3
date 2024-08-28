@@ -212,14 +212,16 @@ export class Candies {
 	}
 	async fallDown(candy: SPRITE, y: number, time = 6) {
 		const speed = 8;
-		if (candy && candy.y != undefined) {
-			const id = setInterval(() => {
-				candy.y += speed;
-				if (candy.y >= y) {
-					clearInterval(id);
-				}
-			}, time);
+		if (!candy || candy.y == null) {
+			console.error("Invalid candy object or undefined y position");
+			return;
 		}
+		const id = setInterval(() => {
+			candy.y += speed;
+			if (candy.y >= y) {
+				clearInterval(id);
+			}
+		}, time);
 	}
 	sleep(ms: number) {
 		return new Promise((resolve) => setTimeout(resolve, ms));
