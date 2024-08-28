@@ -11,7 +11,6 @@ export class Game {
 	gridInfo: GRIDINFO;
 	candies: Candies;
 	ui: UI;
-	moveLimit: number = 200;
 	moveCounter: number = 0;
 	gameOver: boolean = false;
 	private gameOverHandled: boolean = false;
@@ -53,12 +52,11 @@ export class Game {
 			this.particles = []
 			const matches = this.grid.checkGrid();
 			if (this.gameOver) return
-			if (matches.length > 0) {
+			if (matches.length > 0) { // if match
 				this.ui.updateScore(matches);
 				this.grid.fillCol(matches, this.candies);
 			}
-			this.moveCounter = this.ui.getMoveCount();
-			if (this.moveCounter >= this.moveLimit && !this.gameOver) {
+			if (this.ui.getMoveCount() == 0 && !this.gameOver) {
 				this.gameOver = true;
 				this.handleGameOver();
 			}

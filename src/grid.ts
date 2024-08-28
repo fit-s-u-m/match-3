@@ -153,7 +153,6 @@ export class Grid {
 		const columns = Array.from(colToClear);
 		const columnPromises = columns.map((column: number) => this.spawnAndFill(column, candies));
 		await Promise.all(columnPromises);
-		matches = []
 	}
 	async clearMatched(item: MATCH, colToClear: Set<number> = new Set(), candies: Candies) { // has side effect
 		const candyToRemove: { candy: SPRITE, x: number, y: number, cellSize: number }[] = [];

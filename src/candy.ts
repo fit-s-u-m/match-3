@@ -7,7 +7,6 @@ export class Candies {
 	prevPos: { x: number; y: number } = { x: 0, y: 0 };
 	private dragTarget: SPRITE | null = null;
 	private grid: GRID;
-	private moveCounter: number = 0;
 	private ui: Ui;
 	private gameOver: boolean = false;
 	spriteSheet: SPRITESHEET
@@ -61,19 +60,13 @@ export class Candies {
 		}))
 	}
 	async explosion(x: number, y: number, cellSize: number) {
-		// let textures: TEXTURE[] = []
-		// for (let i = 1; i <= 5; i++) {
-		// 	const path = `assets/particle/explosion_${i}.png`
-		// 	const texture = await this.renderer.loadAsset(path)
-		// 	textures.push(texture)
-		// }
 		return new Promise<void>(async (resolve) => {
 
 			const animationSprite = this.renderer.animatedSprite(this.spriteSheet.animations.explosion)
 			this.renderer.stage(animationSprite)
 			animationSprite.position.set(x, y)
 			animationSprite.setSize(cellSize, cellSize)
-			animationSprite.animationSpeed = 0.4
+			animationSprite.animationSpeed = 0.6
 			animationSprite.loop = false
 			animationSprite.zIndex = 10
 			animationSprite.play()
@@ -166,8 +159,7 @@ export class Candies {
 			this.grid.gridInfo[prevGridPos.r][prevGridPos.c].candyId;
 		this.grid.gridInfo[prevGridPos.r][prevGridPos.c].candyId = temp;
 
-		this.moveCounter++;
-		this.ui.updateMove(this.moveCounter);
+		this.ui.updateMove();
 
 		this.dragTarget = null;
 		this.renderer.app.stage.off("pointermove", this.dragMove);
@@ -218,10 +210,14 @@ export class Candies {
 			console.error("Invalid candy object or undefined y position");
 			return;
 		}
-		while (candy.y < y) {
-			candy.y += speed;
-			await this.sleep(time)
-		}
+		await new Promise<void>(async (resolve) => {
+			while (candy.y + speed < y) {
+				await this.sleep(time)
+				candy.y += speed;
+			}
+			candy.y = y;
+			resolve()
+		})
 	}
 	sleep(ms: number) {
 		return new Promise((resolve) => setTimeout(resolve, ms));

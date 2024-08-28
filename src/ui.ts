@@ -11,7 +11,7 @@ export class UI {
 	playBackgroundTexture: TEXTURE;
 	restartTexture: TEXTURE;
 	playTexture: TEXTURE;
-	move: number = 0;
+	move: number = 30;
 	score: number = 0;
 	moveText: TEXT;
 
@@ -114,14 +114,14 @@ export class UI {
 
 		this.renderer.stage(gameOverBackground, gameOverText, restartIcon);
 
-		this.gameoverBackground=gameOverBackground
-		this.gameoverText=gameOverText
-		this.restartIcon=restartIcon
+		this.gameoverBackground = gameOverBackground
+		this.gameoverText = gameOverText
+		this.restartIcon = restartIcon
 	}
 	onRestartClick() {
 		this.soundManager.playSound("buttonClick");
 		this.soundManager.setVolume("buttonClick", 0.1);
-		this.removegameoverScreen() ;
+		this.removegameoverScreen();
 		window.location.reload();
 	}
 
@@ -144,7 +144,7 @@ export class UI {
 		}
 	}
 
-	
+
 	createplayScreen() {
 		const playBackground = this.renderer.createplayBackground(
 			this.playBackgroundTexture,
@@ -204,9 +204,10 @@ export class UI {
 		}
 	}
 
-	updateMove(move: number) {
-		this.move = move;
-		this.moveText.text = `Move : ${move}`;
+	updateMove() {
+		if (this.move <= 0) return -1
+		this.move -= 1;
+		this.moveText.text = `Move : ${this.move}`;
 	}
 	updateScore(matches: MATCH[]) {
 		// this.soundManager.playSound("swapMusic")
