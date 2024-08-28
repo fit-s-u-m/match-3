@@ -1,7 +1,8 @@
-import { RENDERER, TEXTURE, GRIDINFO, MATCH, DIRECTION } from "../types";
-import { Candies } from "./candy";
+import { RENDERER, TEXTURE, GRIDINFO, MATCH, DIRECTION, SPRITE } from "../types";
 
+import { Candies } from "./candy";
 import { Sound } from "./sound";
+
 export class Grid {
 	gridImg: TEXTURE;
 	renderer: RENDERER;
@@ -16,10 +17,11 @@ export class Grid {
 	}
 	async init() {
 		// load spite for grid
-		this.gridImg = await this.renderer.loadAsset("public/ui/scene.png");
+		this.gridImg = await this.renderer.loadAsset("	assets/ui/scene.png");
 	}
 	checkValidity(direction: DIRECTION, matches: MATCH[], r: number, c: number) {
 		const candyId = this.gridInfo[r][c].candyId;
+		if (candyId == -1) return
 		const start = direction == "vertical" ? r == 0 : c == 0;
 		const lastIndex = matches.length >= 0 ? matches.length - 1 : 0;
 		const isMatch: boolean =
@@ -142,26 +144,18 @@ export class Grid {
 	async fillCol(matches: MATCH[], candies: Candies) {
 		if (matches.length == 0) return;
 		let colToClear: Set<number> = new Set();
+		this.soundManager.setVolume("swapMusic", 0.3);
+		this.soundManager.playSound("swapMusic");
 
-		// Step 1: Clear matched candies and collect columns to clear
-		const matchPromises = matches.map((match: MATCH) => {
-			return new Promise<void>((resolve) => {
-				this.clearMatched(match, colToClear);
-				resolve();
-			});
-		});
+		const matchPromises = matches.map((match: MATCH) => this.clearMatched(match, colToClear, candies));
 		await Promise.all(matchPromises);
-		this.soundManager.playSound("matchMusic");
-		this.soundManager.setVolume("matchMusic", 0.3);
 
 		const columns = Array.from(colToClear);
-		const columnPromises = columns.map((column: number) =>
-			this.spawnAndFill(column, candies)
-		);
+		const columnPromises = columns.map((column: number) => this.spawnAndFill(column, candies));
 		await Promise.all(columnPromises);
 	}
-	clearMatched(item: MATCH, colToClear: Set<number> = new Set()) {
-		// has side effect
+	async clearMatched(item: MATCH, colToClear: Set<number> = new Set(), candies: Candies) { // has side effect
+		const candyToRemove: { candy: SPRITE, x: number, y: number, cellSize: number }[] = [];
 		for (let count = 0; count < item.count; count++) {
 			const row =
 				item.direction == "vertical"
@@ -171,15 +165,17 @@ export class Grid {
 				item.direction == "horizontal"
 					? item.startIndex.c + count
 					: item.startIndex.c;
+			const gridInfo = this.gridInfo[row][col];
 
-			const candy = this.gridInfo[row][col].candy;
+			const candy = gridInfo.candy;
 			if (candy) {
-				candy.destroy();
+				colToClear.add(col);
+				candyToRemove.push({ candy, x: gridInfo.x, y: gridInfo.y, cellSize: gridInfo.cellSize })
 				this.gridInfo[row][col].candyId = -1;
 				this.gridInfo[row][col].candy = undefined;
-				colToClear.add(col);
 			}
 		}
+		await candies.destroy(candyToRemove)
 	}
 	async spawnAndFill(column: number, candies: Candies) {
 		let emptyCount = 0;
@@ -193,7 +189,7 @@ export class Grid {
 				const candyMoving = this.gridInfo[r][column];
 				const candyMovingTo = this.gridInfo[r + emptyCount][column];
 				if (candyMoving.candy && candyMovingTo.y) {
-					await candies.fallDown(candyMoving.candy, candyMovingTo.y, 3);
+					await candies.fallDown(candyMoving.candy, candyMovingTo.y, 6);
 				}
 				// Set the new slot
 				this.gridInfo[r + emptyCount][column].candyId = candyMoving.candyId;
@@ -207,7 +203,7 @@ export class Grid {
 		for (let r = 0; r < this.gridInfo.length; r++) {
 			if (this.gridInfo[r][column].candyId == -1) {
 				// is empty
-				const candyId = Math.floor(Math.random() * 4);
+				const candyId = Math.floor(Math.random() * 6);
 				const candy = candies.createCandy(candyId);
 				candies.spawn(
 					this.gridInfo[r][column].x,
@@ -264,7 +260,7 @@ export class Grid {
 				cellSprite.width = cellSize;
 				cellSprite.height = cellSize;
 				this.renderer.stage(cellSprite);
-				const candyId = Math.floor(Math.random() * 4);
+				const candyId = Math.floor(Math.random() * 6);
 				grid[r][c] = { x, y, cellSize, candyId };
 			}
 		}

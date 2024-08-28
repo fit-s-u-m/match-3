@@ -1,6 +1,5 @@
 import * as PIXI from "pixi.js";
-
-import { ELEMENT } from "../types.ts";
+import { ELEMENT, VECTOR } from "../types.ts";
 
 export class Renderer {
 	app: PIXI.Application;
@@ -11,6 +10,7 @@ export class Renderer {
 	playBackgroundTexture: PIXI.Texture | null = null;
 	playTexture: PIXI.Texture | null = null;
 	playIcon: PIXI.Sprite | null = null;
+	particleTicker: PIXI.Ticker | null = null;
 	constructor() {
 		this.app = new PIXI.Application();
 	}
@@ -31,14 +31,13 @@ export class Renderer {
 		document.body.appendChild(this.app.canvas);
 
 		// setting the background
-		const bgPath = "public/ui/bg.png";
+		const bgPath = "/assets/ui/bg.png";
 		const backgroundTexture = await PIXI.Assets.load(bgPath);
 		const backgroundSprite = new PIXI.Sprite(backgroundTexture);
 		backgroundSprite.zIndex = -10;
 		backgroundSprite.width = this.app.screen.width;
 		backgroundSprite.height = this.app.screen.height;
 		this.stage(backgroundSprite);
-
 	}
 	stage(...element: ELEMENT[]) {
 		element.forEach((element) => this.app.stage.addChild(element));
@@ -57,19 +56,48 @@ export class Renderer {
 	async loadAsset(path: string) {
 		return await PIXI.Assets.load(path);
 	}
+	createTexture(path: string) {
+		return PIXI.Texture.from(path);
+	}
+
+	createRect(width: number, height: number, color: string) {
+		return new PIXI.Graphics().rect(0, 0, width, height).fill(color);
+	}
 	createSprite(texture: any) {
 		return new PIXI.Sprite(texture);
 	}
-	async animationLoop(callback: Function) {
+	animationLoop(
+		callback: Function,
+		context: any = null,
+		speed: number = 700) {
 		this.app.ticker.autoStart = false;
 		let elapsedData = 0;
 		this.app.ticker.add((delta) => {
 			elapsedData += delta.deltaMS;
-			if (elapsedData > 700) {
+			if (elapsedData > speed) {
 				callback();
 				elapsedData = 0;
 			}
-		});
+		}, context);
+	}
+	createSpritesheet(data: any) {
+		const texture = PIXI.Texture.from(data.meta.image);
+		return new PIXI.Spritesheet(texture, data);
+	}
+
+	particleAnimation(callback: Function, context: any = null) {
+		const ticker = new PIXI.Ticker();
+		this.particleTicker = ticker;
+		ticker.add(() => {
+			callback();
+		}, context);
+		ticker.start();
+	}
+	stopParticleAnimation() {
+		this.particleTicker?.stop();
+	}
+	createContainer() {
+		return new PIXI.Container();
 	}
 	sleep(ms: number) {
 		return new Promise((resolve) => setTimeout(resolve, ms));
@@ -173,7 +201,12 @@ export class Renderer {
 		playBackground.zIndex = 10;
 		return playBackground;
 	}
-
+	createVector(x: number, y: number): VECTOR {
+		return new PIXI.Point(x, y);
+	}
+	animatedSprite(texture: PIXI.Texture[]) {
+		return new PIXI.AnimatedSprite(texture);
+	}
 	createplayButton(
 		texture: PIXI.Texture,
 		width: number,

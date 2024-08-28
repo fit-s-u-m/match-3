@@ -1,14 +1,15 @@
-import { RENDERER, SPRITE, TEXTURE, GRID, Ui, CANDYINFO } from "../types";
+import { RENDERER, SPRITE, TEXTURE, GRID, Ui, CANDYINFO, SPRITESHEET } from "../types";
 import { Sound } from "./sound";
+import { data } from "../public/assets/particle/particle.ts"
 export class Candies {
 	renderer: RENDERER;
 	candyTextures: TEXTURE[];
 	prevPos: { x: number; y: number } = { x: 0, y: 0 };
 	private dragTarget: SPRITE | null = null;
 	private grid: GRID;
-	private moveCounter: number = 0;
 	private ui: Ui;
 	private gameOver: boolean = false;
+	spriteSheet: SPRITESHEET
 
 	soundManager = new Sound();
 
@@ -17,12 +18,18 @@ export class Candies {
 	}
 	async init() {
 		const candyPaths = [
-			"ui/stone_blue.png",
-			"ui/stone_green.png",
-			"ui/stone_pink.png",
-			"ui/stone_yellow.png",
+			"/assets/ui/stone_blue.png",
+			"/assets/ui/stone_green.png",
+			"/assets/ui/stone_pink.png",
+			"/assets/ui/stone_yellow.png",
+			"/assets/ui/star.png",
+			"/assets/ui/whitesparkle.png",
 		];
 		const promise = candyPaths.map((path) => this.renderer.loadAsset(path));
+		await this.renderer.loadAsset(data.meta.image) //  particle
+		const spritesheet = this.renderer.createSpritesheet(data)
+		await spritesheet.parse() // generate spritesheet
+		this.spriteSheet = spritesheet
 		this.candyTextures = await Promise.all(promise);
 	}
 	createCandy(candyId: number) {
@@ -44,6 +51,31 @@ export class Candies {
 	setGrid(grid: GRID, ui: Ui) {
 		this.grid = grid;
 		this.ui = ui;
+	}
+	async destroy(candiesToRemove: { candy: SPRITE, x: number, y: number, cellSize: number }[]) {
+		return Promise.all(candiesToRemove.map(async candyToRemove => {
+			const candy = candyToRemove.candy
+			candy.destroy()
+			await this.explosion(candyToRemove.x, candyToRemove.y, candyToRemove.cellSize)
+		}))
+	}
+	async explosion(x: number, y: number, cellSize: number) {
+		return new Promise<void>(async (resolve) => {
+
+			const animationSprite = this.renderer.animatedSprite(this.spriteSheet.animations.explosion)
+			this.renderer.stage(animationSprite)
+			animationSprite.position.set(x, y)
+			animationSprite.setSize(cellSize, cellSize)
+			animationSprite.animationSpeed = 0.6
+			animationSprite.loop = false
+			animationSprite.zIndex = 10
+			animationSprite.play()
+			animationSprite.onComplete = () => {
+				animationSprite.destroy()
+				resolve()
+			}
+
+		})
 	}
 
 	dragMove(event: any) {
@@ -118,8 +150,8 @@ export class Candies {
 		}
 
 		this.swap(this.dragTarget, targetCandyInfo.candy);
-		this.soundManager.playSound("swapMusic");
-		this.soundManager.setVolume("swapMusic", 0.3);
+		// this.soundManager.playSound("swapMusic");
+		// this.soundManager.setVolume("swapMusic", 0.3);
 
 		// swaping the ids
 		const temp = this.grid.gridInfo[targetGridPos.r][targetGridPos.c].candyId;
@@ -127,8 +159,7 @@ export class Candies {
 			this.grid.gridInfo[prevGridPos.r][prevGridPos.c].candyId;
 		this.grid.gridInfo[prevGridPos.r][prevGridPos.c].candyId = temp;
 
-		this.moveCounter++;
-		this.ui.updateMove(this.moveCounter);
+		this.ui.updateMove();
 
 		this.dragTarget = null;
 		this.renderer.app.stage.off("pointermove", this.dragMove);
@@ -175,14 +206,18 @@ export class Candies {
 	}
 	async fallDown(candy: SPRITE, y: number, time = 6) {
 		const speed = 8;
-		if (candy) {
-			const id = setInterval(() => {
-				candy.y += speed;
-				if (candy.y >= y) {
-					clearInterval(id);
-				}
-			}, time);
+		if (!candy || candy.y == null) {
+			console.error("Invalid candy object or undefined y position");
+			return;
 		}
+		await new Promise<void>(async (resolve) => {
+			while (candy.y + speed < y) {
+				await this.sleep(time)
+				candy.y += speed;
+			}
+			candy.y = y;
+			resolve()
+		})
 	}
 	sleep(ms: number) {
 		return new Promise((resolve) => setTimeout(resolve, ms));

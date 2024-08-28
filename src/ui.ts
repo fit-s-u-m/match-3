@@ -11,7 +11,7 @@ export class UI {
 	playBackgroundTexture: TEXTURE;
 	restartTexture: TEXTURE;
 	playTexture: TEXTURE;
-	move: number = 0;
+	move: number = 30;
 	score: number = 0;
 	moveText: TEXT;
 
@@ -22,6 +22,15 @@ export class UI {
 	playBackground: any | null = null;
 	playText: TEXT | null = null;
 	playIcon: any | null = null;
+
+
+
+	gameoverBackground: any | null = null;
+	gameoverText: TEXT | null = null;
+	restartIcon: any | null = null;
+
+
+
 	game: Game;
 	constructor(renderer: RENDERER, game: Game) {
 		this.renderer = renderer;
@@ -29,21 +38,19 @@ export class UI {
 	}
 	async init() {
 		this.boardTexture = await this.renderer.loadAsset(
-			"public/ui/time_scores.png"
+			"/assets/ui/time_scores.png"
 		);
 		this.gameOverBackgroundTexture = await this.renderer.loadAsset(
-			"public/ui/button.png"
+			"/assets/ui/button.png"
 		);
 		this.restartTexture = await this.renderer.loadAsset(
-			"public/assets/restart.png"
+			"/assets/ui/restart.png"
 		);
 
 		this.playBackgroundTexture = await this.renderer.loadAsset(
-			"public/ui/button.png"
+			"/assets/ui/button.png"
 		);
-		this.playTexture = await this.renderer.loadAsset(
-			"public/assets/play.png"
-		);
+		this.playTexture = await this.renderer.loadAsset("/assets/ui/play.png");
 	}
 	createCounterBoard(gridPos: { x: number; y: number }, gridWidth: number) {
 		const boardbg = this.renderer.createSprite(this.boardTexture);
@@ -82,7 +89,7 @@ export class UI {
 		const gameOverBackground = this.renderer.createGameOverBackground(
 			this.gameOverBackgroundTexture,
 			400, // Width
-			200	, // Height
+			200, // Height
 			verticalOffset
 		);
 
@@ -106,12 +113,38 @@ export class UI {
 		restartIcon.on("pointerdown", this.onRestartClick.bind(this));
 
 		this.renderer.stage(gameOverBackground, gameOverText, restartIcon);
+
+		this.gameoverBackground = gameOverBackground
+		this.gameoverText = gameOverText
+		this.restartIcon = restartIcon
 	}
 	onRestartClick() {
 		this.soundManager.playSound("buttonClick");
 		this.soundManager.setVolume("buttonClick", 0.1);
-		location.reload(); // for now it just refreshes the page
+		this.removegameoverScreen();
+		window.location.reload();
 	}
+
+
+
+
+	removegameoverScreen() {
+		if (this.gameoverBackground) {
+			this.renderer.remove(this.gameoverBackground);
+			this.gameoverBackground = null;
+		}
+		if (this.gameoverText) {
+			this.renderer.remove(this.gameoverText);
+			this.gameoverText = null;
+		}
+		if (this.restartIcon) {
+			this.restartIcon.off("pointerdown", this.onplayClick.bind(this)); // Remove event listener
+			this.renderer.remove(this.restartIcon);
+			this.restartIcon = null;
+		}
+	}
+
+
 	createplayScreen() {
 		const playBackground = this.renderer.createplayBackground(
 			this.playBackgroundTexture,
@@ -135,7 +168,7 @@ export class UI {
 			}
 		);
 
-		this.renderer.bounce(playIcon, { amplitude: 20, speed: 0.08});
+		this.renderer.bounce(playIcon, { amplitude: 20, speed: 0.08 });
 		playIcon.on("pointerdown", this.onplayClick.bind(this));
 		this.renderer.stage(playBackground, playText, playIcon);
 
@@ -171,11 +204,13 @@ export class UI {
 		}
 	}
 
-	updateMove(move: number) {
-		this.move = move;
-		this.moveText.text = `Move : ${move}`;
+	updateMove() {
+		if (this.move <= 0) return -1
+		this.move -= 1;
+		this.moveText.text = `Move : ${this.move}`;
 	}
 	updateScore(matches: MATCH[]) {
+		// this.soundManager.playSound("swapMusic")
 		const scoreCount = matches.map((match) => (match.count - 2) * 60);
 		const score = scoreCount.reduce((acc, curr) => acc + curr, 0);
 		this.score += score;
