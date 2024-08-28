@@ -23,6 +23,8 @@ export class Candies {
 			"/assets/ui/stone_green.png",
 			"/assets/ui/stone_pink.png",
 			"/assets/ui/stone_yellow.png",
+			"/assets/ui/star.png",
+			"/assets/ui/whitesparkle.png",
 		];
 		const promise = candyPaths.map((path) => this.renderer.loadAsset(path));
 		await this.renderer.loadAsset(data.meta.image) //  particle

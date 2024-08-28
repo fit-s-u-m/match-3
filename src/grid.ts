@@ -202,7 +202,7 @@ export class Grid {
 		for (let r = 0; r < this.gridInfo.length; r++) {
 			if (this.gridInfo[r][column].candyId == -1) {
 				// is empty
-				const candyId = Math.floor(Math.random() * 4);
+				const candyId = Math.floor(Math.random() * 6);
 				const candy = candies.createCandy(candyId);
 				candies.spawn(
 					this.gridInfo[r][column].x,
@@ -259,7 +259,7 @@ export class Grid {
 				cellSprite.width = cellSize;
 				cellSprite.height = cellSize;
 				this.renderer.stage(cellSprite);
-				const candyId = Math.floor(Math.random() * 4);
+				const candyId = Math.floor(Math.random() * 6);
 				grid[r][c] = { x, y, cellSize, candyId };
 			}
 		}
