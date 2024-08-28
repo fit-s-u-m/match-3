@@ -218,12 +218,10 @@ export class Candies {
 			console.error("Invalid candy object or undefined y position");
 			return;
 		}
-		const id = setInterval(() => {
+		while (candy.y < y) {
 			candy.y += speed;
-			if (candy.y >= y) {
-				clearInterval(id);
-			}
-		}, time);
+			await this.sleep(time)
+		}
 	}
 	sleep(ms: number) {
 		return new Promise((resolve) => setTimeout(resolve, ms));
