@@ -21,6 +21,7 @@ export class Grid {
 	}
 	checkValidity(direction: DIRECTION, matches: MATCH[], r: number, c: number) {
 		const candyId = this.gridInfo[r][c].candyId;
+		if (candyId == -1) return
 		const start = direction == "vertical" ? r == 0 : c == 0;
 		const lastIndex = matches.length >= 0 ? matches.length - 1 : 0;
 		const isMatch: boolean =
@@ -143,6 +144,8 @@ export class Grid {
 	async fillCol(matches: MATCH[], candies: Candies) {
 		if (matches.length == 0) return;
 		let colToClear: Set<number> = new Set();
+		this.soundManager.setVolume("swapMusic", 0.3);
+		this.soundManager.playSound("swapMusic");
 
 		const matchPromises = matches.map((match: MATCH) => this.clearMatched(match, colToClear, candies));
 		await Promise.all(matchPromises);
@@ -150,11 +153,10 @@ export class Grid {
 		const columns = Array.from(colToClear);
 		const columnPromises = columns.map((column: number) => this.spawnAndFill(column, candies));
 		await Promise.all(columnPromises);
+		matches = []
 	}
 	async clearMatched(item: MATCH, colToClear: Set<number> = new Set(), candies: Candies) { // has side effect
 		const candyToRemove: { candy: SPRITE, x: number, y: number, cellSize: number }[] = [];
-		this.soundManager.setVolume("matchMusic", 0.3);
-		this.soundManager.playSound("matchMusic");
 		for (let count = 0; count < item.count; count++) {
 			const row =
 				item.direction == "vertical"

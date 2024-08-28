@@ -70,21 +70,15 @@ export class Renderer {
 		callback: Function,
 		context: any = null,
 		speed: number = 700) {
-		async function step() {
-			await callback()
-			requestAnimationFrame(step);
-		}
-		requestAnimationFrame(step);
-
-		// this.app.ticker.autoStart = false;
-		// let elapsedData = 0;
-		// this.app.ticker.add((delta) => {
-		// 	// elapsedData += delta.deltaMS;
-		// 	// if (elapsedData > speed) {
-		// 	callback();
-		// 	// elapsedData = 0;
-		// 	// }
-		// }, context);
+		this.app.ticker.autoStart = false;
+		let elapsedData = 0;
+		this.app.ticker.add((delta) => {
+			elapsedData += delta.deltaMS;
+			if (elapsedData > speed) {
+				callback();
+				elapsedData = 0;
+			}
+		}, context);
 	}
 	createSpritesheet(data: any) {
 		const texture = PIXI.Texture.from(data.meta.image);

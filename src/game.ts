@@ -49,15 +49,13 @@ export class Game {
 		this.grid.gridInfo = this.gridInfo;
 		this.candies.setGrid(this.grid, this.ui);
 
-		this.renderer.animationLoop(async () => {
+		this.renderer.animationLoop(() => {
 			this.particles = []
-			if (this.gameOver) return
 			const matches = this.grid.checkGrid();
-			await this.grid.fillCol(matches, this.candies);
-
+			if (this.gameOver) return
 			if (matches.length > 0) {
-				this.soundManager.playSound("swapMusic")
 				this.ui.updateScore(matches);
+				this.grid.fillCol(matches, this.candies);
 			}
 			this.moveCounter = this.ui.getMoveCount();
 			if (this.moveCounter >= this.moveLimit && !this.gameOver) {
