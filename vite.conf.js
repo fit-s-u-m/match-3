@@ -1,3 +1,7 @@
-export default {
-	base: 'https://fit-s-u-m.github.io/match-3',
-}
+// vite.config.js
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+	base: '/match-3/',
+});
+
