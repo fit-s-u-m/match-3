@@ -31,7 +31,7 @@ export class Renderer {
 		document.body.appendChild(this.app.canvas);
 
 		// setting the background
-		const bgPath = "/assets/ui/bg.png";
+		const bgPath = "/match-3/assets/ui/bg.png";
 		const backgroundTexture = await PIXI.Assets.load(bgPath);
 		const backgroundSprite = new PIXI.Sprite(backgroundTexture);
 		backgroundSprite.zIndex = -10;
