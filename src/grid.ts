@@ -17,7 +17,7 @@ export class Grid {
 	}
 	async init() {
 		// load spite for grid
-		this.gridImg = await this.renderer.loadAsset("/match-3/assets/ui/scene.png");
+		this.gridImg = await this.renderer.loadAsset("/assets/ui/scene.png");
 	}
 	checkValidity(direction: DIRECTION, matches: MATCH[], r: number, c: number) {
 		const candyId = this.gridInfo[r][c].candyId;

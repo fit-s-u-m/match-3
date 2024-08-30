@@ -42,7 +42,7 @@ export class Particle {
 	}
 	async init() {
 		this.particleTexture = await this.renderer.loadAsset(
-			"/match-3/assets/particle/particle.png"
+			"/assets/particle/particle.png"
 		);
 		this.particle = this.renderer.createSprite(this.particleTexture);
 		this.particle.anchor.set(0.5);

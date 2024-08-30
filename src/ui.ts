@@ -38,19 +38,19 @@ export class UI {
 	}
 	async init() {
 		this.boardTexture = await this.renderer.loadAsset(
-			"/match-3/assets/ui/time_scores.png"
+			"/assets/ui/time_scores.png"
 		);
 		this.gameOverBackgroundTexture = await this.renderer.loadAsset(
-			"/match-3/assets/ui/button.png"
+			"/assets/ui/button.png"
 		);
 		this.restartTexture = await this.renderer.loadAsset(
-			"/match-3/assets/ui/restart.png"
+			"/assets/ui/restart.png"
 		);
 
 		this.playBackgroundTexture = await this.renderer.loadAsset(
-			"/match-3/assets/ui/button.png"
+			"/assets/ui/button.png"
 		);
-		this.playTexture = await this.renderer.loadAsset("/match-3/assets/ui/play.png");
+		this.playTexture = await this.renderer.loadAsset("/assets/ui/play.png");
 	}
 	createCounterBoard(gridPos: { x: number; y: number }, gridWidth: number) {
 		const boardbg = this.renderer.createSprite(this.boardTexture);

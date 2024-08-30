@@ -92,7 +92,7 @@ export const data = {
 		},
 	},
 	meta: {
-		image: "/match-3/assets/particle/cloud_sheet.png",
+		image: "/assets/particle/cloud_sheet.png",
 		format: "RGBA8888",
 		size: { w: 6144, h: 6144 },
 		scale: 1
