@@ -44,7 +44,7 @@ jobs:
         run: |
           mkdir -p dist/match-3
           shopt -s extglob
-          mv dist/!(match-3) dist/match-3/
+          mv dist/!(match-3,index.html) dist/match-3/
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
