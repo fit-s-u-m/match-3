@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postbuild":"mkdir -p dist/match-3 && mv  dist/assets dist/match-3"
   },
   "devDependencies": {
     "typescript": "^5.5.3",

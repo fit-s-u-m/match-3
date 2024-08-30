@@ -1,7 +1,10 @@
 // vite.config.js
-import { defineConfig } from 'vite';
 
-export default defineConfig({
+export default {
 	base: '/match-3/',
-});
+	build: {
+		chunkSizeWarningLimit: 1000,
+		outDir: "dist",
+	}
+};
 
